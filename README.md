@@ -19,7 +19,7 @@ Before running Hisemble, you should have already extracted low-dimensional embed
 
 **Step 1: Clone the repository**
 ```bash
-git clone [https://github.com/Liuzq24/Hisemble.git](https://github.com/Liuzq24/Hisemble.git)
+git clone https://github.com/Liuzq24/Hisemble.git
 cd Hisemble
 ```
 
