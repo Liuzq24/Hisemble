@@ -7,7 +7,7 @@
 
 ---
 
-## ⚠️ Prerequisites
+## Prerequisites
 
 Hisemble is designed as a lightweight, downstream representation fusion aggregator. **It operates on pre-computed embeddings.**
 
@@ -15,7 +15,7 @@ Before running Hisemble, you should have already extracted low-dimensional embed
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 **Step 1: Clone the repository**
 ```bash
