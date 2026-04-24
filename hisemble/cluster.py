@@ -4,7 +4,6 @@ import leidenalg
 from scipy.sparse import csr_matrix
 
 def perform_leiden_clustering(net: ig.Graph, resolution: float, seed=42):
-    """标准的 Leiden 社区发现算法"""
     partition = leidenalg.find_partition(
         net, 
         leidenalg.RBConfigurationVertexPartition, 
@@ -15,7 +14,6 @@ def perform_leiden_clustering(net: ig.Graph, resolution: float, seed=42):
     return partition.membership
 
 def matrix_to_igraph(fused_network: csr_matrix) -> ig.Graph:
-    """将稀疏矩阵转化为 igraph 对象"""
     sources, targets = fused_network.nonzero()
     weights = fused_network[sources, targets].A1
     net = ig.Graph(list(zip(sources, targets)), directed=False)
@@ -23,7 +21,7 @@ def matrix_to_igraph(fused_network: csr_matrix) -> ig.Graph:
     return net
 
 def find_best_matrix(matrix: ig.Graph, true_cell_types: int, low=0.1, high=5.0, tolerance=0.01, seed=42):
-    """通过二分查找寻找最优的分辨率 (用于 Benchmark)"""
+    """Binary search for optimal resolution (benchmark use only)."""
     best_resolution = None
     low_n_clusters = len(np.unique(perform_leiden_clustering(matrix, resolution=low, seed=seed)))
     high_n_clusters = len(np.unique(perform_leiden_clustering(matrix, resolution=high, seed=seed)))

@@ -4,7 +4,6 @@ from scipy.sparse import csr_matrix
 from sklearn.metrics.pairwise import rbf_kernel, cosine_similarity
 
 def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric: str, chunk_size: int = 2048, random_seed=42) -> csr_matrix:
-    """分块构建K-NN稀疏亲和度矩阵，降低内存开销"""
     n_samples = embedding.shape[0]
     all_rows, all_cols, all_data = [], [], []
     gamma = None
@@ -44,7 +43,6 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
     return W_symmetric
 
 def normalize_sparse(W_sparse: csr_matrix) -> csr_matrix:
-    """状态矩阵初始化 (Row-normalization)"""
     n_samples = W_sparse.shape[0]
     row_sums = W_sparse.sum(axis=1).A.flatten()
     denominators = 2.0 * row_sums
@@ -56,7 +54,6 @@ def normalize_sparse(W_sparse: csr_matrix) -> csr_matrix:
     return P_sparse.tocsr()
 
 def sparsify_matrix(sparse_matrix: csr_matrix, k_neighbors: int, random_seed=42) -> csr_matrix:
-    """动态稀疏化操作 S_k"""
     n_samples = sparse_matrix.shape[0]
     all_rows, all_cols, all_data = [], [], []
     np.random.seed(random_seed)
