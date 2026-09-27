@@ -12,7 +12,7 @@ The clean build completed successfully on a Linux/arm64 container runtime.
 The resulting local image identifier was:
 
 ```text
-sha256:b03912ba9cb1a532fb0ac91d489db0765b60e7c3d0845183eb31dcb490d8d6f8
+sha256:fbd0f43f411378cb39725c0220ccc3c5b06fed1e5e0f6d523a73249d579c700f
 ```
 
 The following checks passed inside the container:

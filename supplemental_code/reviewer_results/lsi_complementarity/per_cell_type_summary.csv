@@ -1,0 +1,21 @@
+cell_type,n_cells,full_matched_accuracy,no_lsi_matched_accuracy,accuracy_delta,rescued_by_lsi,lost_with_lsi
+Cerebellar granule cells,1091,0.6681943171402384,0.32172318973418884,0.3464711274060495,473,95
+Astrocytes,363,0.6308539944903582,0.349862258953168,0.28099173553719015,102,0
+Inhibitory neurons,281,0.8612099644128114,0.8220640569395018,0.039145907473309594,12,1
+Oligodendrocytes,128,1.0,0.9921875,0.0078125,1,0
+Enterocytes,1,0.0,0.0,0.0,0,0
+Ex. neurons CThPN,2,0.0,0.0,0.0,0,0
+Ex. neurons CPN,2,0.0,0.0,0.0,0,0
+B cells,1,0.0,0.0,0.0,0,0
+Ex. neurons SCPN,2,0.0,0.0,0.0,0,0
+Endothelial II cells,68,0.9852941176470589,0.9852941176470589,0.0,0,0
+Unknown,49,0.2857142857142857,0.2857142857142857,0.0,0,0
+Endothelial I (glomerular),1,0.0,0.0,0.0,0,0
+Endothelial I cells,8,0.0,0.0,0.0,0,0
+Dendritic cells,1,0.0,0.0,0.0,0,0
+Microglia,29,1.0,1.0,0.0,0,0
+Macrophages,4,0.0,0.0,0.0,0,0
+SOM+ Interneurons,18,0.0,0.0,0.0,0,0
+Podocytes,3,0.0,0.0,0.0,0,0
+Collisions,104,0.41346153846153844,0.4230769230769231,-0.009615384615384637,1,2
+Purkinje cells,122,0.8524590163934426,0.9836065573770492,-0.1311475409836066,0,16

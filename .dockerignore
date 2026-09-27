@@ -4,6 +4,9 @@
 README.md
 demo_data
 tutorials
+reproducibility/README_container.md
+supplemental_code/README.md
+supplemental_code/reviewer_results
 *.h5ad
 *.h5
 *.pkl

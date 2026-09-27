@@ -1,0 +1,12 @@
+{
+  "dataset": "mca_Cerebellum_62216",
+  "n_cells": 2278,
+  "k": 15,
+  "mean_neighbor_purity": {
+    "scBasset": 0.899590283874744,
+    "SnapATAC2": 0.9152472929470296,
+    "LSI": 0.8917178811823238
+  },
+  "mean_unique_LSI_neighbors_per_cell": 10.588674275680422,
+  "unique_LSI_same_type_fraction": 0.886406036233987
+}
