@@ -1,6 +1,7 @@
 .git
 .gitignore
 .gitattributes
+README.md
 demo_data
 tutorials
 *.h5ad
