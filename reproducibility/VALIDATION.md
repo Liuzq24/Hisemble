@@ -12,14 +12,14 @@ The clean build completed successfully on a Linux/arm64 container runtime.
 The resulting local image identifier was:
 
 ```text
-sha256:752d95f7df0cac94b52a0e67cad8b65e1ed2962c86c8b73d1d569b7e744b1230
+sha256:c516be6c796d0d78556c536ef2d8fc41645ac1bc6bb58ab1e23d5d64246dba20
 ```
 
 The following checks passed inside the container:
 
 1. Import and version checks for NumPy 1.24.3, SciPy 1.10.1,
    scikit-learn 1.3.2, igraph 0.11.8, AnnData 0.9.2,
-   Matplotlib 3.7.5, and psutil 5.9.8.
+   pandas 2.0.3, Matplotlib 3.7.5, and psutil 5.9.8.
 2. All six tests in `test_hisemble_io.py`.
 3. Two core tests confirming that both iterative diffusion and direct averaging
    are invariant to permutations of the input-view order.

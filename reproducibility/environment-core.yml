@@ -9,5 +9,6 @@ dependencies:
   - python-igraph=0.11.8
   - leidenalg=0.10.2
   - anndata=0.9.2
+  - pandas=2.0.3
   - matplotlib=3.7.5
   - psutil=5.9.8
