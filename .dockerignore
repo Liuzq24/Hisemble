@@ -1,0 +1,17 @@
+.git
+.gitignore
+.gitattributes
+demo_data
+tutorials
+*.h5ad
+*.h5
+*.pkl
+*.csv
+*.pdf
+*.png
+__pycache__
+*.py[cod]
+hisemble.egg-info
+build
+dist
+reproducibility/VALIDATION.md

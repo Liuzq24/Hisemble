@@ -1,12 +1,12 @@
 import numpy as np
 import pandas as pd
-import scanpy as sc
 from anndata import AnnData
 from typing import List, Union
 
 from .graph import build_knn_graph_chunked_cpu
 from .core import hisemble_fusion
 from .cluster import matrix_to_igraph, perform_leiden_clustering
+from .io import validate_embeddings
 
 def run_hisemble(
     adata: AnnData, 
@@ -24,22 +24,26 @@ def run_hisemble(
     Executes graph construction, fusion, and Leiden clustering directly on AnnData.
     """
     
-    # 1. distance metrics (e.g., 'cosine' is recommended for LSI)
+    # 1. Validate aligned embeddings and distance-metric configuration.
     if isinstance(metrics, str):
         metrics = [metrics] * len(input_keys)
     elif len(metrics) != len(input_keys):
         raise ValueError("metrics list length must match input_keys list length.")
 
+    embeddings = {}
+    for key in input_keys:
+        if key not in adata.obsm:
+            raise KeyError(f"Embedding '{key}' not found in adata.obsm.")
+        embeddings[key] = np.asarray(adata.obsm[key])
+    validate_embeddings(embeddings)
+
     # 2. Build local KNN affinity graphs for each view
     W_list = []
     for key, metric in zip(input_keys, metrics):
-        if key not in adata.obsm.keys():
-            raise KeyError(f"Embedding '{key}' not found in adata.obsm.")
-        
         if verbose:
             print(f"Building KNN graph for {key} using {metric} metric...")
             
-        emb = adata.obsm[key]
+        emb = embeddings[key]
         W = build_knn_graph_chunked_cpu(emb, k_neighbors=k_neighbors, metric=metric, random_seed=random_seed)
         W_list.append(W)
 
