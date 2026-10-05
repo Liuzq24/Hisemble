@@ -2,6 +2,42 @@
 
 A representation-fusion framework for ensemble clustering of single-cell data. Hisemble combines aligned, precomputed embeddings and returns a weighted cell–cell consensus graph with Leiden labels directly in AnnData.
 
+## Getting started with the original tutorials
+
+Hisemble operates on precomputed embeddings stored in an AnnData object's `.obsm`. Obtain these representations with upstream tools such as scBasset, SnapATAC2, LSI or scVI before applying Hisemble to your own data. Input views must contain the same cells in the same row order; their feature dimensions may differ.
+
+The original notebooks and demonstration data remain available:
+
+| Tutorial | Demonstration input | What it shows |
+| --- | --- | --- |
+| [Single-cell quick start](tutorials/single_cell_quick_start.ipynb) | [mouse_brain.h5ad](demo_data/mouse_brain.h5ad) | Fuse `X_lsi`, `X_snap` and `X_scBasset`, save labels as `Hisemble_clusters`, and visualize the consensus graph with Scanpy UMAP. |
+| [Spatial quick start](tutorials/spatial_quick_start.ipynb) | [E11_0.h5ad](demo_data/E11_0.h5ad) | Fuse `spatial` coordinates and `X_lsi`, save labels as `Hisemble_domains`, and display the spatial domains. |
+
+To run the notebooks locally, clone the repository and install the package and notebook dependencies:
+
+```bash
+git clone https://github.com/Liuzq24/Hisemble.git
+cd Hisemble
+conda env create -f reproducibility/environment-core.yml
+conda activate hisemble-core
+python -m pip install -r reproducibility/requirements-trajectory.txt
+python -m pip install -e .
+python -m pip install notebook ipykernel
+cd tutorials
+python -m notebook
+```
+
+Open either notebook and run its cells in order. Run from the `tutorials/` directory so that the existing `../demo_data/` paths resolve correctly. For your own AnnData input, replace the data path and `input_keys` with the keys in your `.obsm`, and choose the corresponding metrics. The examples below describe the same public API.
+
+## Repository guide
+
+- [tutorials/](tutorials/): the original single-cell and spatial notebooks.
+- [demo_data/](demo_data/): the AnnData inputs used by those notebooks.
+- [hisemble/](hisemble/): the installable package, including graph construction, fusion, clustering and input validation.
+- [requirements.txt](requirements.txt) and [setup.py](setup.py): the original dependency list and package installation configuration. Use the pinned environment above for reproducible dependency versions.
+- [Reproduction_Tutorial.md](Reproduction_Tutorial.md): the additional Docker and numerical reproduction walkthrough.
+- [examples/](examples/), [reproducibility/](reproducibility/) and [tests/](tests/): executable examples, environment specifications and verification checks.
+
 ## Reproduce on macOS or Linux
 
 Start with [Reproduction_Tutorial.md](Reproduction_Tutorial.md). The tutorial covers Docker setup, input checks, a complete synthetic example, saved AnnData inputs, and the reviewer analyses.
@@ -16,12 +52,6 @@ docker run --rm -v "$PWD/reviewer_output:/output" hisemble:reproduce \
 ```
 
 The example needs no biological download or GPU. It writes a 180-cell AnnData result with four clusters. Docker Desktop or OrbStack must be running on a MacBook.
-
-## Journal Supplemental Code
-
-The current journal archive is [Supplemental_Code.zip](supplemental_code/Supplemental_Code.zip), with [SHA-256 checksum](supplemental_code/Supplemental_Code.zip.sha256). It includes the numerical analysis code, compact reference results, environment files, tutorial and configurable historical workflows. Figure-drawing scripts, raw sequencing data and large input embeddings are excluded.
-
-The archive is independently versioned; its core computational functions match this repository. The existing public API is retained. The original project repository is [BioX-NKU/Hisemble](https://github.com/BioX-NKU/Hisemble).
 
 ## Direct AnnData use
 
