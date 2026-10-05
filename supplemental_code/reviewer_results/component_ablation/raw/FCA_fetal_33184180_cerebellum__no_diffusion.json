@@ -1,0 +1,29 @@
+{
+  "dataset": "FCA_fetal_33184180_cerebellum",
+  "variant": "no_diffusion",
+  "n_cells": 3313,
+  "source_n_cells": 3313,
+  "subsampled": false,
+  "k": 15,
+  "iterations": 20,
+  "seed": 42,
+  "resolution": 0.3296875,
+  "n_clusters": 4,
+  "ARI": 0.5753982500885598,
+  "AMI": 0.5299175185351619,
+  "NMI": 0.5304087963854757,
+  "HOM": 0.5044005279613866,
+  "graph_construction_seconds": 2.038413022994064,
+  "graph_construction_cpu_seconds": 2.0379172810000004,
+  "fusion_seconds": 0.01670410600490868,
+  "fusion_cpu_seconds": 0.01665800200000067,
+  "total_seconds": 14.300153490970843,
+  "peak_memory_mb": 988.76953125,
+  "initial_total_nnz": 281807,
+  "maximum_total_nnz": 281807,
+  "final_total_nnz": 281807,
+  "fused_nnz": 256083,
+  "nnz_history": [
+    281807
+  ]
+}

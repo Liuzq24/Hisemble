@@ -1,3 +1,5 @@
+Start with the current `Reproduction_Tutorial.md` (archive root or GitHub root).
+
 # Hisemble core reproducibility environment
 
 This environment reproduces the **Hisemble fusion and clustering core** from
@@ -11,13 +13,13 @@ their cell-by-feature embeddings.
 Build from the root of the repository:
 
 ```bash
-docker build -f reproducibility/Dockerfile -t hisemble-core:revision .
+docker build -f reproducibility/Dockerfile -t hisemble:reproduce .
 ```
 
 Open a shell with the current directory mounted at `/work`:
 
 ```bash
-docker run --rm -it -v "$PWD:/work" hisemble-core:revision
+docker run --rm -it -v "$PWD:/work" hisemble:reproduce
 ```
 
 The numerical-library thread count defaults to one for reproducible resource
@@ -28,21 +30,21 @@ than strict benchmark comparability.
 Run the input-validation unit tests inside the image:
 
 ```bash
-docker run --rm hisemble-core:revision \
+docker run --rm hisemble:reproduce \
   python /opt/hisemble/tests/test_hisemble_io.py
 ```
 
 Run the core view-order invariance tests:
 
 ```bash
-docker run --rm hisemble-core:revision \
+docker run --rm hisemble:reproduce \
   python /opt/hisemble/tests/test_hisemble_core.py
 ```
 
 Run the package API and AnnData/Seurat interoperability tests:
 
 ```bash
-docker run --rm hisemble-core:revision \
+docker run --rm hisemble:reproduce \
   python /opt/hisemble/tests/test_hisemble_api.py
 ```
 

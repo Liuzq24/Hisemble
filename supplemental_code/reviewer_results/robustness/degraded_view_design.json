@@ -1,10 +1,14 @@
 {
   "datasets": [
-    "FCA_fetal_33184180_spleen",
+    "Chen-2019-ATAC",
     "FCA_fetal_33184180_cerebellum",
-    "mca_Cerebellum_62216",
-    "mca_LargeIntestineA_62816"
+    "mca_Cerebellum_62216"
   ],
+  "display_names": {
+    "Chen-2019-ATAC": "Mouse Cortex",
+    "FCA_fetal_33184180_cerebellum": "FCA Cerebellum",
+    "mca_Cerebellum_62216": "MCA Cerebellum"
+  },
   "noise_levels": [
     0.5,
     1.0,
@@ -20,6 +24,7 @@
   "leiden_seed": 42,
   "k": 15,
   "iterations": 20,
-  "gaussian_noise_definition": "E_corrupt = E + noise_level * N(0,1) * feature_sd(E)",
-  "row_permutation_definition": "LSI rows randomly permuted while scBasset, SnapATAC2, and labels remain fixed"
+  "gaussian_noise_definition": "E_corrupt[i,j] = E[i,j] + sigma * feature_sd[j] * N(0,1)",
+  "row_permutation_definition": "LSI rows randomly permuted while scBasset, SnapATAC2, and labels remain fixed",
+  "merge_validation": "Repeated clean and omitted-LSI controls were identical across split seed jobs; one copy retained."
 }

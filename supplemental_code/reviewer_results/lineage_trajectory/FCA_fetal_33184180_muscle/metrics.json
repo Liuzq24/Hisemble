@@ -1,0 +1,34 @@
+{
+  "dataset": "FCA_fetal_33184180_muscle",
+  "dataset_label": "FCA Muscle",
+  "lineage": "Skeletal-muscle lineage",
+  "n_stages": 3,
+  "n_lineage_cells_total": 16362,
+  "n_cells_in_root_component": 16355,
+  "root_component_coverage": 0.9995721794401662,
+  "n_induced_components": 8,
+  "root_stage": "Satellite cells",
+  "root_cell": "CTCCATAATCGCATTAGGCGTTATATTGAACATCGAAGGA",
+  "root_strategy": "highest weighted degree within the predefined earliest stage",
+  "spearman_rho": 0.6479280803460463,
+  "spearman_p_value": 0.0,
+  "ordinal_concordance": 0.8258666206326954,
+  "stage_counts": {
+    "Satellite cells": 3358,
+    "Skeletal muscle cells?": 6201,
+    "Skeletal muscle cells": 6796
+  },
+  "stage_median_pseudotime": {
+    "Satellite cells": 3.7725210859207436e-05,
+    "Skeletal muscle cells?": 0.0002774745225906372,
+    "Skeletal muscle cells": 0.0004351602401584387
+  },
+  "stage_median_dpt_percentile": {
+    "Satellite cells": 0.1113183319065672,
+    "Skeletal muscle cells?": 0.42411642411642414,
+    "Skeletal muscle cells": 0.6795585177938119
+  },
+  "strictly_increasing_stage_medians": true,
+  "source_h5ad": "FCA_fetal_33184180_muscle_Hisemble_result.h5ad",
+  "graph_key": "obsp['connectivities']"
+}

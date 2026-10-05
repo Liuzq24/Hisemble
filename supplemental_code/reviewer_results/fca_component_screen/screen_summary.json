@@ -1,0 +1,62 @@
+{
+  "exploratory": true,
+  "all_completed_comparisons": [
+    {
+      "dataset": "FCA_fetal_33184180_cerebellum",
+      "n_cells": 3313,
+      "full_ARI": 0.34674728096704904,
+      "no_diffusion_ARI": 0.5753982500885598,
+      "delta_ARI": -0.22865096912151078,
+      "full_NMI": 0.49869330233266407,
+      "no_diffusion_NMI": 0.5304087963854757,
+      "delta_NMI": -0.0317154940528116,
+      "positive_both": false
+    },
+    {
+      "dataset": "FCA_fetal_33184180_pancreas",
+      "n_cells": 4994,
+      "full_ARI": 0.5871288029386078,
+      "no_diffusion_ARI": 0.6179022606930377,
+      "delta_ARI": -0.030773457754429856,
+      "full_NMI": 0.5984655606536499,
+      "no_diffusion_NMI": 0.6124123398106387,
+      "delta_NMI": -0.013946779156988831,
+      "positive_both": false
+    },
+    {
+      "dataset": "FCA_fetal_33184180_stomach",
+      "n_cells": 3840,
+      "full_ARI": 0.47020997321855845,
+      "no_diffusion_ARI": 0.5184902975455212,
+      "delta_ARI": -0.048280324326962776,
+      "full_NMI": 0.5330974137511498,
+      "no_diffusion_NMI": 0.5489874725206393,
+      "delta_NMI": -0.015890058769489457,
+      "positive_both": false
+    },
+    {
+      "dataset": "FCA_fetal_33184180_muscle",
+      "n_cells": 27181,
+      "full_ARI": 0.5089856615472526,
+      "no_diffusion_ARI": 0.5539542970958824,
+      "delta_ARI": -0.04496863554862984,
+      "full_NMI": 0.633982685282857,
+      "no_diffusion_NMI": 0.632929067162161,
+      "delta_NMI": 0.0010536181206959316,
+      "positive_both": false
+    },
+    {
+      "dataset": "FCA_fetal_33184180_intestine",
+      "n_cells": 42942,
+      "full_ARI": 0.5560457054854901,
+      "no_diffusion_ARI": 0.5079645575356404,
+      "delta_ARI": 0.048081147949849745,
+      "full_NMI": 0.739816494727535,
+      "no_diffusion_NMI": 0.719665224359279,
+      "delta_NMI": 0.020151270368255925,
+      "positive_both": true
+    }
+  ],
+  "selected": "FCA_fetal_33184180_intestine",
+  "rule": "Both ARI and NMI positive; largest ARI improvement among positive new candidates"
+}

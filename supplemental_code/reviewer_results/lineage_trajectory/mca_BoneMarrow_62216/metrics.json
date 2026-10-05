@@ -1,0 +1,49 @@
+{
+  "dataset": "mca_BoneMarrow_62216",
+  "dataset_label": "MCA Bone Marrow",
+  "lineage": "B-cell lineage",
+  "stages": [
+    "Hematopoietic progenitors",
+    "Immature B cells",
+    "B cells",
+    "Activated B cells"
+  ],
+  "stage_labels": [
+    "Hematopoietic progenitors",
+    "Immature B cells",
+    "B cells",
+    "Activated B cells"
+  ],
+  "n_stages": 4,
+  "n_lineage_cells_total": 1943,
+  "n_cells_in_root_component": 1943,
+  "root_component_coverage": 1.0,
+  "n_induced_components": 1,
+  "root_stage": "Hematopoietic progenitors",
+  "root_cell": "1085",
+  "root_strategy": "highest weighted degree within the predefined earliest stage",
+  "spearman_rho": 0.7644229782983922,
+  "spearman_p_value": 0.0,
+  "ordinal_concordance": 0.9823018832373037,
+  "stage_counts": {
+    "Hematopoietic progenitors": 1426,
+    "Immature B cells": 264,
+    "B cells": 242,
+    "Activated B cells": 11
+  },
+  "stage_median_pseudotime": {
+    "Hematopoietic progenitors": 0.002265552757307887,
+    "Immature B cells": 0.04597851261496544,
+    "B cells": 0.050322115421295166,
+    "Activated B cells": 0.05069800466299057
+  },
+  "stage_median_dpt_percentile": {
+    "Hematopoietic progenitors": 0.3668898043254377,
+    "Immature B cells": 0.8153964984552009,
+    "B cells": 0.9320288362512874,
+    "Activated B cells": 0.945417095777549
+  },
+  "strictly_increasing_stage_medians": true,
+  "source_h5ad": "mca_BoneMarrow_62216_Hisemble_result.h5ad",
+  "graph_key": "obsp['connectivities']"
+}

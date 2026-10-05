@@ -1,33 +1,27 @@
-# Reproducibility environment validation
+# Validation of Supplemental Code 20261004
 
-Validation date: 2026-09-27
+Validation date: 2026-10-04 (America/Toronto). The submitted Dockerfile was built locally on Linux/arm64 with tag `hisemble:reproduce`. It includes the unchanged core dependency pins plus the separate trajectory dependency list. No image was uploaded to a registry.
 
-The Docker image was built from the repository root with:
+Passed checks:
+
+1. All nine original submission tests (6 input validation, 2 view-order invariance, 1 AnnData API).
+2. Synthetic example: 180 cells, four clusters, graph shape 180×180, 7,372 nonzeros.
+3. Reloading its embeddings with `run_hisemble_from_h5ad.py`.
+4. Exact equality of serial and two-worker parallel seed metrics on a complete 90-cell synthetic fixture (seeds 0, 42, 101).
+5. Finite Scanpy diffusion pseudotime on a connected sparse graph.
+6. Seven numerical analysis CLI entry points accept `--help`.
+7. All ten tests in the existing GitHub checkout passed when read-only mounted into the new dependency environment. The public package itself was imported for this check; no repository files were modified.
+8. The FCA screening summary regenerated exactly from the archived numerical records.
+9. All packaged Python sources parsed successfully; the computational core matches the prior submission snapshot, and the main four computational modules match the existing GitHub checkout.
+
+The numerical-only DPT script was additionally run against the existing server MCA Bone Marrow graph: 1,943 lineage cells, Spearman rho 0.7644229782983922, ordinal concordance 0.9823018832373037; ten-root median rho 0.7628491749195323 and concordance 0.9814750537996966. These match the reported results after removing all UMAP and figure generation.
+
+To repeat the image checks:
 
 ```bash
-docker build -f reproducibility/Dockerfile -t hisemble-core:revision .
+docker run --rm hisemble:reproduce python /opt/hisemble/reproducibility/validate_snapshot.py
 ```
 
-The clean build completed successfully on a Linux/arm64 container runtime.
-The resulting local image identifier was:
+Full manuscript-data analyses are not rerun by this quick check; they require the external precomputed embeddings or saved consensus graphs listed in the reviewer tutorial. Historical upstream encoder environments remain separate.
 
-```text
-sha256:fbd0f43f411378cb39725c0220ccc3c5b06fed1e5e0f6d523a73249d579c700f
-```
-
-The following checks passed inside the container:
-
-1. Import and version checks for NumPy 1.24.3, SciPy 1.10.1,
-   scikit-learn 1.3.2, igraph 0.11.8, AnnData 0.9.2,
-   pandas 2.0.3, Matplotlib 3.7.5, and psutil 5.9.8.
-2. All six tests in `test_hisemble_io.py`.
-3. Two core tests confirming that both iterative diffusion and direct averaging
-   are invariant to permutations of the input-view order.
-4. Two package API tests: an AnnData/Seurat interoperability test and an
-   end-to-end synthetic `run_hisemble` test covering graph construction, two
-   diffusion iterations, Leiden clustering, and AnnData output storage.
-
-The image tag and digest above document the revision-stage local validation.
-They are not a permanent public identifier. Replace the provisional tag in the
-manuscript and response letter with the final GitHub release or archival DOI
-after the Supplemental Code package is frozen.
+The current GitHub-route reproduction image was rebuilt on the MacBook from the updated repository, and the full validate_snapshot.py check passed with all ten existing public tests. The renamed tutorial is Reproduction_Tutorial.md.

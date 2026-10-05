@@ -1,0 +1,5 @@
+scanpy==1.9.8
+numba==0.58.1
+umap-learn==0.5.7
+pynndescent==0.5.13
+seaborn==0.13.2

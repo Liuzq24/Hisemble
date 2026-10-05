@@ -9,3 +9,5 @@ dist/
 
 .ipynb_checkpoints/
 .DS_Store
+# Local reproduction outputs
+reviewer_output/

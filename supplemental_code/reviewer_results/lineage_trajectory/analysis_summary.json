@@ -1,0 +1,332 @@
+{
+  "selection_rule": "Among predefined lineages with at least three annotated stages, select the highest cell-level ordinal concordance; use graph coverage as a tiebreaker.",
+  "representative": {
+    "dataset": "mca_BoneMarrow_62216",
+    "dataset_label": "MCA Bone Marrow",
+    "lineage": "B-cell lineage",
+    "stages": [
+      "Hematopoietic progenitors",
+      "Immature B cells",
+      "B cells",
+      "Activated B cells"
+    ],
+    "stage_labels": [
+      "Hematopoietic progenitors",
+      "Immature B cells",
+      "B cells",
+      "Activated B cells"
+    ],
+    "n_stages": 4,
+    "n_lineage_cells_total": 1943,
+    "n_cells_in_root_component": 1943,
+    "root_component_coverage": 1.0,
+    "n_induced_components": 1,
+    "root_stage": "Hematopoietic progenitors",
+    "root_cell": "1085",
+    "root_strategy": "highest weighted degree within the predefined earliest stage",
+    "spearman_rho": 0.7644229782983922,
+    "spearman_p_value": 0.0,
+    "ordinal_concordance": 0.9823018832373037,
+    "stage_counts": {
+      "Hematopoietic progenitors": 1426,
+      "Immature B cells": 264,
+      "B cells": 242,
+      "Activated B cells": 11
+    },
+    "stage_median_pseudotime": {
+      "Hematopoietic progenitors": 0.002265552757307887,
+      "Immature B cells": 0.04597851261496544,
+      "B cells": 0.050322115421295166,
+      "Activated B cells": 0.05069800466299057
+    },
+    "stage_median_dpt_percentile": {
+      "Hematopoietic progenitors": 0.3668898043254377,
+      "Immature B cells": 0.8153964984552009,
+      "B cells": 0.9320288362512874,
+      "Activated B cells": 0.945417095777549
+    },
+    "strictly_increasing_stage_medians": true,
+    "source_h5ad": "mca_BoneMarrow_62216_Hisemble_result.h5ad",
+    "graph_key": "obsp['connectivities']"
+  },
+  "representative_root_sensitivity": {
+    "n_roots": 10,
+    "root_definition": "top weighted-degree cells in the prespecified earliest stage",
+    "spearman_rho_median": 0.7628491749195323,
+    "spearman_rho_range": [
+      0.7432475896906532,
+      0.7648241473624953
+    ],
+    "ordinal_concordance_median": 0.9814750537996966,
+    "ordinal_concordance_range": [
+      0.9709481638684213,
+      0.9825336929896764
+    ]
+  },
+  "all_candidates": [
+    {
+      "dataset": "Chen-2019-ATAC",
+      "dataset_label": "Mouse Cortex",
+      "lineage": "Oligodendrocyte lineage",
+      "stages": [
+        "OPC",
+        "OliI",
+        "OliM"
+      ],
+      "stage_labels": [
+        "OPC",
+        "Immature oligodendrocytes",
+        "Mature oligodendrocytes"
+      ],
+      "n_stages": 3,
+      "n_lineage_cells_total": 398,
+      "n_cells_in_root_component": 384,
+      "root_component_coverage": 0.964824120603015,
+      "n_induced_components": 13,
+      "root_stage": "OPC",
+      "root_cell": "09K_ACGACCCACTAG",
+      "root_strategy": "highest weighted degree within the predefined earliest stage",
+      "spearman_rho": 0.09150500564744149,
+      "spearman_p_value": 0.07328719616197076,
+      "ordinal_concordance": 0.5520399666944213,
+      "stage_counts": {
+        "OPC": 94,
+        "OliI": 29,
+        "OliM": 261
+      },
+      "stage_median_pseudotime": {
+        "OPC": 0.0021377435186877847,
+        "OliI": 0.002130904933437705,
+        "OliM": 0.002015727572143078
+      },
+      "stage_median_dpt_percentile": {
+        "OPC": 0.5156657963446476,
+        "OliI": 0.5143603133159269,
+        "OliM": 0.4934725848563969
+      },
+      "strictly_increasing_stage_medians": false,
+      "source_h5ad": "Chen-2019-ATAC_Hisemble_result.h5ad",
+      "graph_key": "obsp['connectivities']"
+    },
+    {
+      "dataset": "mca_BoneMarrow_62216",
+      "dataset_label": "MCA Bone Marrow",
+      "lineage": "B-cell lineage",
+      "stages": [
+        "Hematopoietic progenitors",
+        "Immature B cells",
+        "B cells",
+        "Activated B cells"
+      ],
+      "stage_labels": [
+        "Hematopoietic progenitors",
+        "Immature B cells",
+        "B cells",
+        "Activated B cells"
+      ],
+      "n_stages": 4,
+      "n_lineage_cells_total": 1943,
+      "n_cells_in_root_component": 1943,
+      "root_component_coverage": 1.0,
+      "n_induced_components": 1,
+      "root_stage": "Hematopoietic progenitors",
+      "root_cell": "1085",
+      "root_strategy": "highest weighted degree within the predefined earliest stage",
+      "spearman_rho": 0.7644229782983922,
+      "spearman_p_value": 0.0,
+      "ordinal_concordance": 0.9823018832373037,
+      "stage_counts": {
+        "Hematopoietic progenitors": 1426,
+        "Immature B cells": 264,
+        "B cells": 242,
+        "Activated B cells": 11
+      },
+      "stage_median_pseudotime": {
+        "Hematopoietic progenitors": 0.002265552757307887,
+        "Immature B cells": 0.04597851261496544,
+        "B cells": 0.050322115421295166,
+        "Activated B cells": 0.05069800466299057
+      },
+      "stage_median_dpt_percentile": {
+        "Hematopoietic progenitors": 0.3668898043254377,
+        "Immature B cells": 0.8153964984552009,
+        "B cells": 0.9320288362512874,
+        "Activated B cells": 0.945417095777549
+      },
+      "strictly_increasing_stage_medians": true,
+      "source_h5ad": "mca_BoneMarrow_62216_Hisemble_result.h5ad",
+      "graph_key": "obsp['connectivities']"
+    },
+    {
+      "dataset": "TME-All",
+      "dataset_label": "Human Tumor",
+      "lineage": "CD8 T-cell state progression",
+      "stages": [
+        "Naive CD8 T",
+        "Memory CD8 T",
+        "Effector CD8 T",
+        "CD8 TEx"
+      ],
+      "stage_labels": [
+        "Naive CD8 T",
+        "Memory CD8 T",
+        "Effector CD8 T",
+        "Exhausted CD8 T"
+      ],
+      "n_stages": 4,
+      "n_lineage_cells_total": 13480,
+      "n_cells_in_root_component": 13480,
+      "root_component_coverage": 1.0,
+      "n_induced_components": 1,
+      "root_stage": "Naive CD8 T",
+      "root_cell": "18367",
+      "root_strategy": "highest weighted degree within the predefined earliest stage",
+      "spearman_rho": 0.7259205291441202,
+      "spearman_p_value": 0.0,
+      "ordinal_concordance": 0.8280042937666113,
+      "stage_counts": {
+        "Naive CD8 T": 2902,
+        "Memory CD8 T": 5067,
+        "Effector CD8 T": 1178,
+        "CD8 TEx": 4333
+      },
+      "stage_median_pseudotime": {
+        "Naive CD8 T": 0.000620105885900557,
+        "Memory CD8 T": 0.0004410867695696652,
+        "Effector CD8 T": 0.0029666090849786997,
+        "CD8 TEx": 0.012496523559093475
+      },
+      "stage_median_dpt_percentile": {
+        "Naive CD8 T": 0.3734327472364419,
+        "Memory CD8 T": 0.2514281474886861,
+        "Effector CD8 T": 0.6571704132354033,
+        "CD8 TEx": 0.8308479857556198
+      },
+      "strictly_increasing_stage_medians": false,
+      "source_h5ad": "TME-All_Hisemble_result.h5ad",
+      "graph_key": "obsp['connectivities']"
+    },
+    {
+      "dataset": "FCA_fetal_33184180_muscle",
+      "dataset_label": "FCA Muscle",
+      "lineage": "Skeletal-muscle lineage",
+      "stages": [
+        "Satellite cells",
+        "Skeletal muscle cells?",
+        "Skeletal muscle cells"
+      ],
+      "stage_labels": [
+        "Satellite cells",
+        "Intermediate skeletal muscle",
+        "Skeletal muscle cells"
+      ],
+      "n_stages": 3,
+      "n_lineage_cells_total": 16362,
+      "n_cells_in_root_component": 16355,
+      "root_component_coverage": 0.9995721794401662,
+      "n_induced_components": 8,
+      "root_stage": "Satellite cells",
+      "root_cell": "CTCCATAATCGCATTAGGCGTTATATTGAACATCGAAGGA",
+      "root_strategy": "highest weighted degree within the predefined earliest stage",
+      "spearman_rho": 0.6479280803460463,
+      "spearman_p_value": 0.0,
+      "ordinal_concordance": 0.8258666206326954,
+      "stage_counts": {
+        "Satellite cells": 3358,
+        "Skeletal muscle cells?": 6201,
+        "Skeletal muscle cells": 6796
+      },
+      "stage_median_pseudotime": {
+        "Satellite cells": 3.7725210859207436e-05,
+        "Skeletal muscle cells?": 0.0002774745225906372,
+        "Skeletal muscle cells": 0.0004351602401584387
+      },
+      "stage_median_dpt_percentile": {
+        "Satellite cells": 0.1113183319065672,
+        "Skeletal muscle cells?": 0.42411642411642414,
+        "Skeletal muscle cells": 0.6795585177938119
+      },
+      "strictly_increasing_stage_medians": true,
+      "source_h5ad": "FCA_fetal_33184180_muscle_Hisemble_result.h5ad",
+      "graph_key": "obsp['connectivities']"
+    },
+    {
+      "dataset": "mca_Lung1_62216",
+      "dataset_label": "MCA Lung A",
+      "lineage": "Alveolar epithelial lineage",
+      "stages": [
+        "Type II pneumocytes",
+        "Type I pneumocytes"
+      ],
+      "stage_labels": [
+        "Type II pneumocytes",
+        "Type I pneumocytes"
+      ],
+      "n_stages": 2,
+      "n_lineage_cells_total": 1075,
+      "n_cells_in_root_component": 1075,
+      "root_component_coverage": 1.0,
+      "n_induced_components": 1,
+      "root_stage": "Type II pneumocytes",
+      "root_cell": "3414",
+      "root_strategy": "highest weighted degree within the predefined earliest stage",
+      "spearman_rho": 0.2657074079459648,
+      "spearman_p_value": 7.899416650312673e-19,
+      "ordinal_concordance": 0.7755516840882695,
+      "stage_counts": {
+        "Type II pneumocytes": 91,
+        "Type I pneumocytes": 984
+      },
+      "stage_median_pseudotime": {
+        "Type II pneumocytes": 0.042334504425525665,
+        "Type I pneumocytes": 0.3446868658065796
+      },
+      "stage_median_dpt_percentile": {
+        "Type II pneumocytes": 0.049348230912476726,
+        "Type I pneumocytes": 0.5237430167597765
+      },
+      "strictly_increasing_stage_medians": true,
+      "source_h5ad": "mca_Lung1_62216_Hisemble_result.h5ad",
+      "graph_key": "obsp['connectivities']"
+    },
+    {
+      "dataset": "mca_Lung2_62216",
+      "dataset_label": "MCA Lung B",
+      "lineage": "Alveolar epithelial lineage",
+      "stages": [
+        "Type II pneumocytes",
+        "Type I pneumocytes"
+      ],
+      "stage_labels": [
+        "Type II pneumocytes",
+        "Type I pneumocytes"
+      ],
+      "n_stages": 2,
+      "n_lineage_cells_total": 703,
+      "n_cells_in_root_component": 703,
+      "root_component_coverage": 1.0,
+      "n_induced_components": 1,
+      "root_stage": "Type II pneumocytes",
+      "root_cell": "3300",
+      "root_strategy": "highest weighted degree within the predefined earliest stage",
+      "spearman_rho": 0.2667279500080932,
+      "spearman_p_value": 6.472602058109615e-13,
+      "ordinal_concordance": 0.7658066071859175,
+      "stage_counts": {
+        "Type II pneumocytes": 65,
+        "Type I pneumocytes": 638
+      },
+      "stage_median_pseudotime": {
+        "Type II pneumocytes": 0.1310531347990036,
+        "Type I pneumocytes": 0.7384031414985657
+      },
+      "stage_median_dpt_percentile": {
+        "Type II pneumocytes": 0.05413105413105413,
+        "Type I pneumocytes": 0.524928774928775
+      },
+      "strictly_increasing_stage_medians": true,
+      "source_h5ad": "mca_Lung2_62216_Hisemble_result.h5ad",
+      "graph_key": "obsp['connectivities']"
+    }
+  ]
+}

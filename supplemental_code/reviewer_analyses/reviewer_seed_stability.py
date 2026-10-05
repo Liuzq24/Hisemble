@@ -22,12 +22,7 @@ from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 from component_ablation import build_affinity, cluster_to_count, fuse
 
 
-DEFAULT_DATASETS = (
-    "FCA_fetal_33184180_spleen",
-    "FCA_fetal_33184180_cerebellum",
-    "mca_Cerebellum_62216",
-    "mca_LargeIntestineA_62816",
-)
+DEFAULT_DATASETS = ('Chen-2019-ATAC', 'FCA_fetal_33184180_cerebellum', 'mca_Cerebellum_62216', 'FCA_fetal_33184180_pancreas', 'mca_HeartA_62816', 'mca_Lung1_62216', 'FCA_fetal_33184180_intestine', 'TME-All')
 DEFAULT_SEEDS = (0, 1, 2, 3, 4, 42, 101, 202, 314, 777)
 
 

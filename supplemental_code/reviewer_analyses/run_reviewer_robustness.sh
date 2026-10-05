@@ -23,9 +23,5 @@ export NUMEXPR_NUM_THREADS=${NUMEXPR_NUM_THREADS:-1}
   --output-dir "$OUTPUT_ROOT/degraded_view" \
   >"$OUTPUT_ROOT/degraded_view.log" 2>&1
 
-"$PYTHON_BIN" "$SCRIPT_DIR/plot_reviewer_robustness.py" \
-  --input-root "$OUTPUT_ROOT" \
-  --output-dir "$OUTPUT_ROOT/figures" \
-  >"$OUTPUT_ROOT/plotting.log" 2>&1
 
-echo "Reviewer robustness analyses completed in $OUTPUT_ROOT"
+echo "Reviewer robustness numerical analyses completed in $OUTPUT_ROOT"

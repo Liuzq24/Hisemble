@@ -13,8 +13,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY reproducibility/requirements-core.txt /tmp/requirements-core.txt
+COPY reproducibility/requirements-trajectory.txt /tmp/requirements-trajectory.txt
 RUN python -m pip install --no-cache-dir --upgrade pip \
-    && python -m pip install --no-cache-dir -r /tmp/requirements-core.txt
+    && python -m pip install --no-cache-dir -r /tmp/requirements-core.txt -r /tmp/requirements-trajectory.txt
 
 COPY . /opt/hisemble
 WORKDIR /work

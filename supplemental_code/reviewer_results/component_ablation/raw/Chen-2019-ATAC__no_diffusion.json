@@ -1,0 +1,29 @@
+{
+  "dataset": "Chen-2019-ATAC",
+  "variant": "no_diffusion",
+  "n_cells": 9190,
+  "source_n_cells": 9190,
+  "subsampled": false,
+  "k": 15,
+  "iterations": 20,
+  "seed": 42,
+  "resolution": 1.325,
+  "n_clusters": 23,
+  "ARI": 0.40371990495635596,
+  "AMI": 0.555995742190514,
+  "NMI": 0.5597461043114662,
+  "HOM": 0.5874933177626462,
+  "graph_construction_seconds": 17.382026460021734,
+  "graph_construction_cpu_seconds": 17.381095112,
+  "fusion_seconds": 0.04650943004526198,
+  "fusion_cpu_seconds": 0.04651172499999845,
+  "total_seconds": 60.05365392600652,
+  "peak_memory_mb": 1654.84765625,
+  "initial_total_nnz": 750664,
+  "maximum_total_nnz": 750664,
+  "final_total_nnz": 750664,
+  "fused_nnz": 672972,
+  "nnz_history": [
+    750664
+  ]
+}
