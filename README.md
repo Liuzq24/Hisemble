@@ -79,7 +79,9 @@ All views must contain the same cells in the same row order, finite numeric valu
 
 ## Numerical revision analyses
 
-[supplemental_code/reviewer_analyses](supplemental_code/reviewer_analyses) contains full-data component ablation/scaling, LSI neighborhood complementarity, eight-dataset ten-seed stability, three-dataset degraded-view robustness, the complete FCA screen, and numerical-only DPT lineage analysis. [Reference tables](supplemental_code/reviewer_results) retain the reported outcomes and explain stopped conditions. No figure-generation entry points are included.
+[analyses/](analyses/) contains component ablation/scaling, LSI neighborhood complementarity, eight-dataset ten-seed stability, three-dataset degraded-view robustness and numerical DPT lineage analysis. [results/](results/) contains the current Supplemental Tables S4–S9 and cell-level pseudotime. [workflows/](workflows/), [ANALYSIS_MAP.md](ANALYSIS_MAP.md) and [INPUTS_AND_ENVIRONMENTS.md](INPUTS_AND_ENVIRONMENTS.md) document preprocessing, representations, benchmarks and their separate input/environment requirements. Configure external paths with `prepare_workflows.py` and `config.example.json`.
+
+The journal archive is [supplemental_code/Supplemental_Code.zip](supplemental_code/Supplemental_Code.zip). The older `supplemental_code/reviewer_analyses` and `reviewer_results` directories are historical snapshots; use the root-level analyses and results for the current revision.
 
 ## Installation without Docker
 
@@ -89,7 +91,7 @@ A pinned Conda specification is provided in [reproducibility/environment-core.ym
 
 ```bash
 docker run --rm hisemble:reproduce \
-  python /opt/hisemble/reproducibility/validate_snapshot.py
+  python /opt/hisemble/reproducibility/verify_installation.py
 ```
 
 This runs the packaged tests, both examples, serial/parallel seed comparison, a graph-based DPT check and CLI checks. Details are recorded in [VALIDATION.md](reproducibility/VALIDATION.md).

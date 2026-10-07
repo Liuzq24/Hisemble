@@ -1,0 +1,16 @@
+record_type,dataset,dataset_label,lineage,n_stages,n_lineage_cells_total,n_cells_in_root_component,root_component_coverage,n_induced_components,spearman_rho,spearman_p_value,ordinal_concordance,strictly_increasing_stage_medians,root_stage,root_cell,stages,stage_counts,stage_median_pseudotime,stage_median_dpt_percentile,stage,stage_index,stage_n_cells,stage_median_raw_DPT,stage_median_DPT_percentile,root_weighted_degree
+lineage_summary,mca_BoneMarrow_62216,MCA Bone Marrow,B-cell lineage,4,1943,1943,1.0,1,0.7644229782983922,0.0,0.9823018832373037,True,Hematopoietic progenitors,1085,"['Hematopoietic progenitors', 'Immature B cells', 'B cells', 'Activated B cells']","{'Hematopoietic progenitors': 1426, 'Immature B cells': 264, 'B cells': 242, 'Activated B cells': 11}","{'Hematopoietic progenitors': 0.002265552757307887, 'Immature B cells': 0.04597851261496544, 'B cells': 0.050322115421295166, 'Activated B cells': 0.05069800466299057}","{'Hematopoietic progenitors': 0.3668898043254377, 'Immature B cells': 0.8153964984552009, 'B cells': 0.9320288362512874, 'Activated B cells': 0.945417095777549}",,,,,,
+stage_summary,mca_BoneMarrow_62216,MCA Bone Marrow,B-cell lineage,,,,,,,,,,,,,,,,Hematopoietic progenitors,0,1426,0.002265552757307887,0.3668898043254377,
+stage_summary,mca_BoneMarrow_62216,MCA Bone Marrow,B-cell lineage,,,,,,,,,,,,,,,,Immature B cells,1,264,0.04597851261496544,0.8153964984552009,
+stage_summary,mca_BoneMarrow_62216,MCA Bone Marrow,B-cell lineage,,,,,,,,,,,,,,,,B cells,2,242,0.050322115421295166,0.9320288362512874,
+stage_summary,mca_BoneMarrow_62216,MCA Bone Marrow,B-cell lineage,,,,,,,,,,,,,,,,Activated B cells,3,11,0.05069800466299057,0.945417095777549,
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7644229782983922,0.0,0.9823018832373037,,,1085,,,,,,,,,,5.420623302459717
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7648241473624953,0.0,0.9825336929896764,,,710,,,,,,,,,,3.2796313762664795
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7435296408539604,0.0,0.9710969187897299,,,1277,,,,,,,,,,3.114969491958618
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7434317311887768,0.0,0.9710436149429277,,,619,,,,,,,,,,3.0176472663879395
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7641935359752163,0.0,0.9821841189246011,,,64,,,,,,,,,,2.922581911087036
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.743957018263386,0.0,0.9713510417802989,,,272,,,,,,,,,,2.902560234069824
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7645495752484253,0.0,0.9824010531848428,,,125,,,,,,,,,,2.8542611598968506
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7640324939028171,0.0,0.9820961055961601,,,1267,,,,,,,,,,2.8434524536132812
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7432475896906532,0.0,0.9709481638684213,,,289,,,,,,,,,,2.7876408100128174
+root_sensitivity,mca_BoneMarrow_62216,MCA Bone Marrow,,,,,,,0.7616658559362474,0.0,0.9808540020032329,,,502,,,,,,,,,,2.630270004272461

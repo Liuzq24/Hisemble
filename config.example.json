@@ -1,0 +1,10 @@
+{
+  "RESULTS_ROOT": "/path/to/results_root",
+  "DATA_ROOT": "/path/to/data_root",
+  "WORKFLOW_ROOT": "/path/to/configured_workflows",
+  "SPATIAL_ROOT": "/path/to/spatial_root",
+  "RAW_ATAC_ROOT": "/path/to/raw_atac_root",
+  "GENOME_ROOT": "/path/to/genome_root",
+  "ANNOTATION_ROOT": "/path/to/annotation_root",
+  "SCBASSET_BIN": "/path/to/scbasset_bin"
+}

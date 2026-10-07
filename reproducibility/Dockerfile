@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     OPENBLAS_NUM_THREADS=1 \
     MKL_NUM_THREADS=1 \
     NUMEXPR_NUM_THREADS=1 \
-    PYTHONPATH=/opt/hisemble:/opt/hisemble/supplemental_code/reviewer_analyses
+    PYTHONPATH=/opt/hisemble:/opt/hisemble/analyses
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y build-essential libxml2 \

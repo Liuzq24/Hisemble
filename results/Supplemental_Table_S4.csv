@@ -1,0 +1,14 @@
+section,dataset,dataset_label,condition,metric,value,n_cells,k,n_annotation_categories
+clustering,mca_Cerebellum_62216,MCA Cerebellum,full,ARI,0.5590358501043754,2278,15,20
+clustering,mca_Cerebellum_62216,MCA Cerebellum,full,NMI,0.686194870232742,2278,15,20
+clustering,mca_Cerebellum_62216,MCA Cerebellum,full,matched_accuracy,0.6957857769973661,2278,15,20
+clustering,mca_Cerebellum_62216,MCA Cerebellum,full,resolution,0.7890625,2278,15,20
+clustering,mca_Cerebellum_62216,MCA Cerebellum,no_lsi,ARI,0.3080799064409718,2278,15,20
+clustering,mca_Cerebellum_62216,MCA Cerebellum,no_lsi,NMI,0.6348167052124085,2278,15,20
+clustering,mca_Cerebellum_62216,MCA Cerebellum,no_lsi,matched_accuracy,0.4872695346795435,2278,15,20
+clustering,mca_Cerebellum_62216,MCA Cerebellum,no_lsi,resolution,0.8751953125,2278,15,20
+neighbor_purity,mca_Cerebellum_62216,MCA Cerebellum,scBasset,mean_same_cell_type_neighbor_purity,0.899590283874744,2278,15,20
+neighbor_purity,mca_Cerebellum_62216,MCA Cerebellum,SnapATAC2,mean_same_cell_type_neighbor_purity,0.9152472929470296,2278,15,20
+neighbor_purity,mca_Cerebellum_62216,MCA Cerebellum,LSI,mean_same_cell_type_neighbor_purity,0.8917178811823238,2278,15,20
+LSI_exclusive_neighbors,mca_Cerebellum_62216,MCA Cerebellum,LSI,mean_unique_LSI_neighbors_per_cell,10.588674275680422,2278,15,20
+LSI_exclusive_neighbors,mca_Cerebellum_62216,MCA Cerebellum,LSI,unique_LSI_same_type_fraction,0.886406036233987,2278,15,20

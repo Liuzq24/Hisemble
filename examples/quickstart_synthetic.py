@@ -15,7 +15,7 @@ from hisemble import run_hisemble
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output-dir", type=Path, default=Path("reviewer_output"))
+    parser.add_argument("--output-dir", type=Path, default=Path("example_output"))
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
 

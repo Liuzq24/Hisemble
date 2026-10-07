@@ -11,3 +11,6 @@ dist/
 .DS_Store
 # Local reproduction outputs
 reviewer_output/
+
+example_output/
+local_reproduction/

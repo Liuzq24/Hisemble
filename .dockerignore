@@ -4,6 +4,5 @@
 **/.DS_Store
 **/*.h5ad
 **/*.pkl
-demo_data
-reviewer_output
-supplemental_code/Supplemental_Code.zip
+example_output
+**/*.zip

@@ -1,72 +1,16 @@
-Start with the current `Reproduction_Tutorial.md` (archive root or GitHub root).
+# Hisemble reproducibility environment
 
-# Hisemble core reproducibility environment
-
-This environment reproduces the **Hisemble fusion and clustering core** from
-precomputed cell embeddings. It intentionally does not bundle training
-environments for scBasset, SnapATAC2, scVI, or other upstream encoders. Those
-tools have separate GPU and platform requirements, whereas Hisemble only needs
-their cell-by-feature embeddings.
-
-## Docker
-
-Build from the root of the repository:
+Start with the root-level `Reproduction_Tutorial.md`. Build from the repository root:
 
 ```bash
 docker build -f reproducibility/Dockerfile -t hisemble:reproduce .
+docker run --rm hisemble:reproduce python /opt/hisemble/reproducibility/verify_installation.py
 ```
 
-Open a shell with the current directory mounted at `/work`:
+The image runs fusion, Leiden clustering and graph-based DPT from precomputed embeddings. Upstream encoders have separate input and environment requirements described in `INPUTS_AND_ENVIRONMENTS.md`. Numerical library thread counts default to one.
 
-```bash
-docker run --rm -it -v "$PWD:/work" hisemble:reproduce
-```
+The current public interface exposes `run_hisemble`, `hisemble_fusion` and `validate_embeddings`. `run_hisemble` writes connectivity and distance graphs, categorical clustering labels and neighbors metadata into AnnData. The older optional AnnData storage and Seurat export helper functions are not included in the current journal archive or package.
 
-The numerical-library thread count defaults to one for reproducible resource
-benchmarks. Users may override `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`,
-`MKL_NUM_THREADS`, and `NUMEXPR_NUM_THREADS` when throughput is more important
-than strict benchmark comparability.
+The archive has nine tests; the GitHub checkout also tests all six view permutations directly in the production fusion core. See `VALIDATION.md` for actual local checks and `requirements-resolved-linux-arm64.txt` for the full dependency versions resolved during that run. This resolved list records the tested Linux/arm64 environment; it is not a claim that upstream workflows or other platforms were tested.
 
-Run the input-validation unit tests inside the image:
-
-```bash
-docker run --rm hisemble:reproduce \
-  python /opt/hisemble/tests/test_hisemble_io.py
-```
-
-Run the core view-order invariance tests:
-
-```bash
-docker run --rm hisemble:reproduce \
-  python /opt/hisemble/tests/test_hisemble_core.py
-```
-
-Run the package API and AnnData/Seurat interoperability tests:
-
-```bash
-docker run --rm hisemble:reproduce \
-  python /opt/hisemble/tests/test_hisemble_api.py
-```
-
-The revision-stage build and test record is documented in `VALIDATION.md`.
-
-## Conda
-
-```bash
-conda env create -f reproducibility/environment-core.yml
-conda activate hisemble-core
-```
-
-## Input and output safeguards
-
-`hisemble/io.py` provides:
-
-- `validate_embeddings` for shape, finite-value, cell-order, degeneracy, and
-  robust row-norm outlier checks;
-- `store_consensus_in_anndata` for Scanpy/AnnData workflows; and
-- `export_consensus_for_seurat` for sparse Matrix Market export with ordered
-  cell identifiers and cluster metadata.
-
-Hisemble produces a weighted cell-cell consensus graph. It does not silently
-remove cells, impute upstream embeddings, or claim to produce a new Euclidean
-joint embedding.
+For Conda installation, use `environment-core.yml`, install `requirements-trajectory.txt` for DPT, then run `pip install -e .` from the repository root.

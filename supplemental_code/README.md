@@ -1,7 +1,5 @@
-# Supplemental revision analyses
+# Supplemental code archive
 
-This independently versioned journal snapshot includes numerical reviewer analyses and compact results. It does not require a matching public GitHub release. The existing Hisemble package interfaces are unchanged.
+`Supplemental_Code.zip` is the current journal submission archive, with its SHA-256 in `Supplemental_Code.zip.sha256`. The root-level `analyses/`, `results/` and `workflows/` provide the same current code and tables directly in the repository. Start with the root-level `Reproduction_Tutorial.md`.
 
-`reviewer_analyses/` contains component ablation/downsampling, LSI complementarity, eight-dataset Leiden seed stability, three-dataset degraded-view robustness, and numerical-only DPT lineage analysis. No standalone plotting or panel-export scripts are included.
-
-`reviewer_results/` contains reference tables. Raw inputs and precomputed embeddings are external; see the root reviewer tutorial for exact names and commands. The original seed analysis still calculates ancillary pairwise agreement, but the reported seed figure and table use only per-seed ARI/NMI.
+`reviewer_analyses/` and `reviewer_results/` retain the previous revision as historical records. They are not the entry points or reference tables for the current revision.

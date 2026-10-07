@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validated input and interoperability utilities for Hisemble.
+"""Validated input utilities for Hisemble.
 
 These utilities deliberately do not impute non-finite values or silently remove
 cells. Every view must refer to the same cells in the same order; changing rows
@@ -8,10 +8,8 @@ independently would invalidate cross-view fusion.
 
 from __future__ import annotations
 
-import csv
 import warnings
 from dataclasses import asdict, dataclass
-from pathlib import Path
 from typing import Mapping, Sequence
 
 import numpy as np
@@ -167,119 +165,3 @@ def validation_report_as_dict(
     reports: Mapping[str, ViewValidationReport],
 ) -> dict[str, dict[str, object]]:
     return {name: asdict(report) for name, report in reports.items()}
-
-
-def store_consensus_in_anndata(
-    adata,
-    consensus,
-    *,
-    clusters: Sequence[object] | None = None,
-    graph_key: str = "hisemble_connectivities",
-    cluster_key: str = "hisemble_cluster",
-):
-    """Store a Hisemble consensus graph and optional clusters in AnnData.
-
-    The input AnnData object is modified in place and also returned.
-    """
-
-    from scipy.sparse import csr_matrix
-
-    graph = csr_matrix(consensus)
-    if graph.shape != (adata.n_obs, adata.n_obs):
-        raise ValueError(
-            f"Consensus shape {graph.shape} does not match AnnData observations "
-            f"({adata.n_obs}, {adata.n_obs})"
-        )
-    if not np.isfinite(graph.data).all():
-        raise ValueError("Consensus graph contains NaN or infinite edge weights")
-    adata.obsp[graph_key] = graph
-
-    if clusters is not None:
-        values = np.asarray(clusters)
-        if values.ndim != 1 or len(values) != adata.n_obs:
-            raise ValueError(
-                f"Cluster labels must have length {adata.n_obs}; shape={values.shape}"
-            )
-        adata.obs[cluster_key] = values.astype(str)
-
-    adata.uns.setdefault("hisemble", {})
-    adata.uns["hisemble"].update(
-        {
-            "graph_key": graph_key,
-            "cluster_key": cluster_key if clusters is not None else None,
-            "output_type": "weighted cell-cell consensus graph",
-        }
-    )
-    return adata
-
-
-def export_consensus_for_seurat(
-    consensus,
-    cell_ids: Sequence[str],
-    output_dir: str | Path,
-    *,
-    clusters: Sequence[object] | None = None,
-) -> dict[str, Path]:
-    """Export a sparse consensus graph and metadata for R/Seurat workflows."""
-
-    from scipy.io import mmwrite
-    from scipy.sparse import csr_matrix
-
-    output = Path(output_dir)
-    output.mkdir(parents=True, exist_ok=True)
-    graph = csr_matrix(consensus)
-    identifiers = np.asarray(cell_ids, dtype=str)
-    if graph.shape != (len(identifiers), len(identifiers)):
-        raise ValueError(
-            f"Consensus shape {graph.shape} does not match {len(identifiers)} cell IDs"
-        )
-    if len(np.unique(identifiers)) != len(identifiers):
-        raise ValueError("Cell identifiers must be unique")
-    if not np.isfinite(graph.data).all():
-        raise ValueError("Consensus graph contains NaN or infinite edge weights")
-
-    matrix_path = output / "hisemble_consensus.mtx"
-    cells_path = output / "hisemble_cells.tsv"
-    metadata_path = output / "hisemble_metadata.csv"
-    readme_path = output / "README_Seurat_import.txt"
-    mmwrite(matrix_path, graph)
-
-    with cells_path.open("w", newline="") as handle:
-        for identifier in identifiers:
-            handle.write(f"{identifier}\n")
-
-    cluster_values = None if clusters is None else np.asarray(clusters)
-    if cluster_values is not None and (
-        cluster_values.ndim != 1 or len(cluster_values) != len(identifiers)
-    ):
-        raise ValueError(
-            f"Cluster labels must have length {len(identifiers)}; "
-            f"shape={cluster_values.shape}"
-        )
-    with metadata_path.open("w", newline="") as handle:
-        fieldnames = ["cell_id"] + (["hisemble_cluster"] if clusters is not None else [])
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        for index, identifier in enumerate(identifiers):
-            row = {"cell_id": identifier}
-            if cluster_values is not None:
-                row["hisemble_cluster"] = str(cluster_values[index])
-            writer.writerow(row)
-
-    readme_path.write_text(
-        "Hisemble exports a weighted cell-cell graph, not a feature matrix.\n"
-        "R example:\n"
-        "  library(Matrix)\n"
-        "  G <- readMM('hisemble_consensus.mtx')\n"
-        "  cells <- read.delim('hisemble_cells.tsv', header=FALSE)$V1\n"
-        "  rownames(G) <- cells; colnames(G) <- cells\n"
-        "  meta <- read.csv('hisemble_metadata.csv', row.names=1)\n"
-        "Verify that cells exactly match colnames(seurat_object) before attaching results.\n",
-        encoding="utf-8",
-    )
-    return {
-        "matrix": matrix_path,
-        "cells": cells_path,
-        "metadata": metadata_path,
-        "readme": readme_path,
-    }
