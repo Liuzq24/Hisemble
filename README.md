@@ -81,7 +81,7 @@ All views must contain the same cells in the same row order, finite numeric valu
 
 [analyses/](analyses/) contains component ablation/scaling, LSI neighborhood complementarity, eight-dataset ten-seed stability, three-dataset degraded-view robustness and numerical DPT lineage analysis. [results/](results/) contains the current Supplemental Tables S1–S10 and cell-level pseudotime. [workflows/](workflows/), [ANALYSIS_MAP.md](ANALYSIS_MAP.md) and [INPUTS_AND_ENVIRONMENTS.md](INPUTS_AND_ENVIRONMENTS.md) document preprocessing, representations, benchmarks and their separate input/environment requirements. Configure external paths with `prepare_workflows.py` and `config.example.json`.
 
-The journal archive is [supplemental_code/Supplemental_Code.zip](supplemental_code/Supplemental_Code.zip). Use root-level analyses and results for the current revision. The earlier `supplemental_code/reviewer_analyses/` and `reviewer_results/` snapshots are retained as historical records.
+The journal archive is [supplemental_code/Supplemental_Code.zip](supplemental_code/Supplemental_Code.zip). Use root-level analyses and results for the current revision.
 
 ## Installation without Docker
 

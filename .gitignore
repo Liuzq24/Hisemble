@@ -14,3 +14,7 @@ reviewer_output/
 
 example_output/
 local_reproduction/
+
+# Private reviewer materials remain outside the public repository.
+supplemental_code/reviewer_analyses/
+supplemental_code/reviewer_results/
