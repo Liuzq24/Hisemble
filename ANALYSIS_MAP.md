@@ -5,7 +5,7 @@
 | scATAC Hisemble benchmark | `workflows/scatac/hisemble/run_Hisemble.py` | clustered AnnData and benchmark metrics |
 | LSI ablation | `workflows/scatac/hisemble/Hisemble_ablation_lsi.py` | full/no-LSI metrics |
 | Neighborhood sensitivity | `workflows/scatac/hisemble/Hisemble_K_Sensitive.py` | metrics across k |
-| Convergence | `workflows/scatac/hisemble/Hisemble_convergence.py` | iteration-wise convergence records |
+| Convergence (fixed initial W) | `analyses/convergence/run_core_convergence.py`, `export_original_metrics.py`; compatible workflow `workflows/scatac/hisemble/Hisemble_convergence.py` | iteration-wise original P/Q metrics and T20 consensus graph |
 | SC3 and CHAI baselines | `workflows/scatac/baselines/` | baseline metrics |
 | Scaling/downsampling | `workflows/scatac/downsampling/` | runtime, memory, and clustering metrics |
 | scBasset, SnapATAC2, and LSI representations | `workflows/scatac/representations/` | precomputed cell embeddings |

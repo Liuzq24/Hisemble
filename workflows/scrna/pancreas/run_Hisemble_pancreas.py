@@ -18,9 +18,9 @@ from scipy.sparse import csr_matrix, identity as sparse_identity
 from sklearn.neighbors import NearestNeighbors
 import math
 # UMAP figure settings
-FIG_SIZE = (6, 6)   # 单个 UMAP 画布大小
-DOT_SIZE = 12       # 散点大小
-TITLE_SIZE = 18     # 标题字体大小
+FIG_SIZE = (6, 6)   # Size of each UMAP panel.
+DOT_SIZE = 12       # Point size.
+TITLE_SIZE = 18     # Title font size.
 
 plt.rcParams['font.family'] = 'Arial'
 mpl.rcParams['pdf.fonttype'] = 42 
@@ -31,7 +31,7 @@ plt.rcParams['axes.titleweight'] = 'bold'
 plt.rcParams['axes.linewidth'] = 1.2
 
 def plot_pixel_perfect_umap(adata, color_key, title, filename, ari_score=None):
-    """标准化的无边框 UMAP 绘图函数"""
+    """Draw a UMAP panel without a surrounding frame."""
     fig, ax = plt.subplots(figsize=FIG_SIZE)
     sc.pl.umap(
         adata,
@@ -39,7 +39,7 @@ def plot_pixel_perfect_umap(adata, color_key, title, filename, ari_score=None):
         show=False,
         ax=ax,
         size=DOT_SIZE,
-        legend_loc='none', # 隐藏自带图例
+        legend_loc='none', # Hide the default legend.
         title=title,
         frameon=False,
     )
@@ -68,12 +68,12 @@ def plot_pixel_perfect_umap(adata, color_key, title, filename, ari_score=None):
     print(f"Saved UMAP: {filename}")
 
 def save_horizontal_legend(adata, color_key, filename):
-    """生成横向排布的独立图例，强制排为 4 行"""
+    """Create a separate horizontal legend arranged in four rows."""
     cats = adata.obs[color_key].cat.categories
     colors = adata.uns[f'{color_key}_colors']
     global_ctype_palette = dict(zip(cats, colors))
 
-    # 宽度依然是 18 (3倍 UMAP 宽)，高度从 2 增加到 4，给 4 行图例留出充足的呼吸空间
+    # Use an 18-by-4 canvas to accommodate the four-row legend.
     fig_leg, ax_leg = plt.subplots(figsize=(18, 4)) 
     
     legend_patches = []
@@ -108,9 +108,9 @@ os.environ['PYTHONHASHSEED'] = str(RANDOM_SEED)
 
 adata = sc.read_h5ad("../data/scRNA_pancreas.h5ad")
 embedding_pca = adata.obsm['X_pca']
-print(f"视图 1 (PCA) 准备就绪: {embedding_pca.shape}")
+print(f"View 1 (PCA) ready: {embedding_pca.shape}")
 embedding_scvi = adata.obsm['X_scvi']
-print(f"视图 2 (scVI) 准备就绪: {embedding_scvi.shape}")
+print(f"View 2 (scVI) ready: {embedding_scvi.shape}")
 true_labels = adata.obs.cell_type.to_numpy()
 true_cell_types = adata.obs['cell_type'].nunique()
 
@@ -118,13 +118,13 @@ W_pca = build_knn_graph_chunked_cpu(embedding_pca, k_neighbors=K_NEIGHBORS, metr
 W_scvi = build_knn_graph_chunked_cpu(embedding_scvi, k_neighbors=K_NEIGHBORS, metric='gaussian') 
 W_list = [W_pca, W_scvi]
 
-def SNF(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
+def Hisemble(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
     num_views = len(W_list)
     n_samples = W_list[0].shape[0]
     P_list = [normalize_sparse(W) for W in W_list]
     k_retained = k_neighbors * 2
     for iter_num in range(n_iterations):
-        print(f"  - 第 {iter_num + 1}/{n_iterations} 次迭代...")
+        print(f"  - Iteration {iter_num + 1}/{n_iterations}...")
         P_updated_list = []
         for i in range(num_views):
             sum_P_others = csr_matrix((n_samples, n_samples), dtype=np.float32)
@@ -145,7 +145,7 @@ def SNF(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed
     final_affinity = (final_P + final_P.T) / 2
     return final_affinity
 
-fused_network = SNF(W_list, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
+fused_network = Hisemble(W_list, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
 sources, targets = fused_network.nonzero()
 weights = fused_network[sources, targets].A1
 net = ig.Graph(list(zip(sources, targets)), directed=False)
@@ -155,7 +155,7 @@ fused_network = fused_network.astype(np.float32)
 adata.obsp['connectivities'] = fused_network
 distances = adata.obsp['connectivities'].copy()
 distances.data = 1.0 - distances.data
-distances.eliminate_zeros() # 移除那些 similarity=1.0 导致的 0
+distances.eliminate_zeros() # Remove zero distances created by similarities equal to one.
 adata.obsp['distances'] = distances
 
 adata.uns['neighbors'] = {}
@@ -165,8 +165,8 @@ adata.uns['neighbors']['distances_key'] = 'distances'
 
 sc.tl.umap(adata, random_state=RANDOM_SEED)
 if len(clusters) != adata.n_obs:
-    raise ValueError(f"聚类列表的长度 ({len(clusters)}) "
-                        f"与 adata.n_obs ({adata.n_obs}) 不匹配")
+    raise ValueError(f"The number of cluster labels ({len(clusters)}) "
+                        f"does not match adata.n_obs ({adata.n_obs}).")
 adata.obs['Hisemble'] = clusters
 adata.obs['Hisemble'] = adata.obs['Hisemble'].astype('category')
 adata.obs['cell_type'] = adata.obs['cell_type'].astype('category')

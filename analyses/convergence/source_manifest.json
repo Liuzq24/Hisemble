@@ -1,0 +1,8 @@
+{
+  "source_root": "submission_staging/Supplemental_Code/revision_core/hisemble",
+  "sha256": {
+    "core.py": "b50c57779ebba6147a732b8cf786c94d19c847f482663b6191a14ac938a518c5",
+    "graph.py": "d5b1e568047db331f98f35daefdf21a2155a785bf601ff3ec4cdc4d583e3353d",
+    "io.py": "ee0db7cfa88d715628f79bc5f6e87ce0c033a0aa12c17c343f0e202718ae1f7d"
+  }
+}

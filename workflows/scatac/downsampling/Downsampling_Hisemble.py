@@ -24,7 +24,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import warnings
 warnings.filterwarnings("ignore")
 import tensorflow as tf
-from utils import cluster_evaluation, overcorrection_score #从utils里面导入
+from utils import cluster_evaluation, overcorrection_score # Import shared utilities.
 from sklearn.metrics.pairwise import rbf_kernel, euclidean_distances
 from sklearn.metrics import adjusted_rand_score,adjusted_mutual_info_score,normalized_mutual_info_score, homogeneity_score
 from scipy.spatial.distance import pdist, squareform
@@ -74,9 +74,9 @@ class MemoryMonitor:
     def _monitor(self):
         while self.running:
             try:
-                # 获取当前进程及其子进程的内存
+                # Measure memory used by the current process and its children.
                 mem = self.process.memory_info().rss
-                # 尝试获取子进程内存（对于并行任务很重要）
+                # Include child-process memory for parallel tasks.
                 for child in self.process.children(recursive=True):
                     try:
                         mem += child.memory_info().rss
@@ -100,13 +100,13 @@ class MemoryMonitor:
         self.peak_mb = self.peak_memory / (1024 ** 2)
 
 
-def SNF(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
+def Hisemble(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
     num_views = len(W_list)
     n_samples = W_list[0].shape[0]
     P_list = [normalize_sparse(W) for W in W_list]
     k_retained = k_neighbors * 2
     for iter_num in range(n_iterations):
-        print(f"  - 第 {iter_num + 1}/{n_iterations} 次迭代...")
+        print(f"  - Iteration {iter_num + 1}/{n_iterations}...")
         P_updated_list = []
         for i in range(num_views):
             sum_P_others = csr_matrix((n_samples, n_samples), dtype=np.float32)
@@ -133,7 +133,7 @@ def run_hisemble_workflow(embeddings):
     graphs.append(build_knn_graph_chunked_cpu(embeddings[1], k_neighbors=K_NEIGHBORS, metric='gaussian', random_seed=RANDOM_SEED))
     graphs.append(build_knn_graph_chunked_cpu(embeddings[2], k_neighbors=K_NEIGHBORS, metric='cosine', random_seed=RANDOM_SEED))
 
-    fused_network = SNF(W_list=graphs, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
+    fused_network = Hisemble(W_list=graphs, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
     del graphs
 
     sources, targets = fused_network.nonzero()
@@ -146,21 +146,20 @@ def run_hisemble_workflow(embeddings):
     return clusters
 
 def run_one_kmeans(data, k, seed):
-    # n_init=1000 是为了严格复现 SC3 的高精度要求，但这很慢。
+    # n_init=1000 uses many k-means initializations and can be slow.
     kmeans = KMeans(n_clusters=k, n_init=1000, random_state=seed, algorithm='elkan')
     return kmeans.fit_predict(data)
 
 def run_sc3_workflow(embeddings, n_clusters=true_cell_types, n_runs=20):
-    """
-    模拟 SC3 的核心瓶颈：
-    1. 对每个嵌入运行多次 K-Means (并行)
-    2. 构建 N x N 的密集共识矩阵 (内存杀手)
-    """
+    """SC3-style consensus baseline on precomputed embeddings.
+1. Run repeated k-means on each embedding in parallel.
+2. Construct the dense N x N co-association matrix.
+"""
     N = embeddings[0].shape[0]
     all_labels = []
 
-    # 1. 并行运行 K-means
-    # 对三个嵌入，每个跑 n_runs 次，总共 3 * n_runs 次
+    # 1. Run k-means in parallel.
+    # Run n_runs partitions per embedding, giving 3 * n_runs for three views.
     tasks = []
     for emb in embeddings:
         for i in range(n_runs):
@@ -172,23 +171,23 @@ def run_sc3_workflow(embeddings, n_clusters=true_cell_types, n_runs=20):
     )
     label_matrix = np.array(results).T # Shape: (N, 3*n_runs)
 
-    # 2. 构建共识矩阵 (这里是内存爆炸的地方)
+    # 2. Construct the dense consensus matrix, which dominates memory use.
     consensus_matrix = np.zeros((N, N), dtype=np.float32)
     
-    # 逐列计算以节省一点内存，但最终必须持有 N x N 矩阵
+    # Accumulate partitions one at a time; the final N x N matrix remains dense.
     n_total_runs = label_matrix.shape[1]
     for i in range(n_total_runs):
         lbl = label_matrix[:, i]
-        # 广播计算：相等为1，不等为0
-        # 这一步会生成临时的 N x N bool 矩阵
+        # Broadcast label equality: one for a shared cluster and zero otherwise.
+        # This step creates a temporary N x N Boolean matrix.
         mat = (lbl[:, None] == lbl[None, :])
         consensus_matrix += mat
     
     consensus_matrix /= n_total_runs
     
-    # 3. 层次聚类 (需要距离矩阵)
+    # 3. Hierarchical clustering requires a distance matrix.
     
-    # SC3 使用 1-consensus 作为距离
+    # Use 1 - consensus as the clustering distance.
     
     Z = linkage(squareform(1 - consensus_matrix, checks=False), method='complete')
     labels = fcluster(Z, t=n_clusters, criterion='maxclust')
@@ -203,7 +202,7 @@ if os.path.exists(save_path):
 print(f"Results will be incrementally saved to: {save_path}")
 
 for n in sample_sizes:
-    # 下采样
+    # Downsample cells.
     indices = np.random.choice(MAX_CELLS, n, replace=False)
     embs_subset = [FULL_EMB_1[indices], FULL_EMB_2[indices], FULL_EMB_3[indices]]
     print("  Running Hisemble...")
@@ -230,7 +229,7 @@ for n in sample_sizes:
     #     })
     # except MemoryError:
     #     print("    SC3: Memory Error (OOM)!")
-    #     # 记录一个特殊值用于画图，表示失败
+    # Record a failure marker for plotting.
     #     results.append({'Method': 'Consensus(SC3)', 'Cells': n, 'Time(s)': None, 'Memory(MB)': None})
     # except Exception as e:
     #     print(f"    SC3 Error: {e}")

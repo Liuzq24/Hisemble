@@ -37,7 +37,7 @@ docker run --rm hisemble:reproduce \
 
 Expected outcome: `OK` (nine tests). These cover aligned input validation, NaN/Inf rejection, mismatched cells, degenerate embeddings, view-order invariance, and the AnnData interface.
 
-A broader executable check additionally runs both examples, compares serial and parallel seed results, verifies finite graph-based DPT, and checks numerical CLI entry points:
+A broader executable check additionally runs the four convergence-equivalence checks and both examples, compares serial and parallel seed results, verifies finite graph-based DPT, and checks numerical CLI entry points:
 
 ```bash
 docker run --rm hisemble:reproduce \
@@ -158,7 +158,7 @@ The script computes DPT for the 1,943-cell MCA Bone Marrow B-cell lineage shown 
 
 ## 7. Locate reference results and analysis workflows
 
-The full-precision reference tables `Supplemental_Table_S4.csv`--`Supplemental_Table_S9.csv` are under `results/` and match the separately submitted CSV files. Cell-level pseudotime for Supplemental Fig. S10 is in `lineage_trajectory/mca_BoneMarrow_62216/pseudotime.csv`. MCA Lung A inputs contain 5,122 aligned cells. Generated resource fields named `peak_memory_mb` use MiB; divide by 1,024 to compare with the GiB values in the supplementary tables.
+The full-precision reference tables `Supplemental_Table_S1.csv`--`Supplemental_Table_S10.csv` are under `results/` and match the separately submitted CSV files. Cell-level pseudotime for Supplemental Fig. S10 is in `lineage_trajectory/mca_BoneMarrow_62216/pseudotime.csv`. MCA Lung A inputs contain 5,122 aligned cells. Generated resource fields named `peak_memory_mb` use MiB; divide by 1,024 to compare with the GiB values in the supplementary tables.
 
 The archive contains `ANALYSIS_MAP.md`, `INPUTS_AND_ENVIRONMENTS.md`, and configurable preprocessing, encoder and benchmark workflows under `workflows/`. These require separate upstream environments and external inputs. Their complete execution is not covered by the core Docker checks. Pure figure-layout and export programs are excluded.
 
@@ -190,3 +190,7 @@ the Pancreas comparison keeps its own helper alongside its two scripts.
 - NaN/Inf or incompatible cells: correct or explicitly align the upstream inputs before fusion.
 - Memory pressure: begin with the synthetic example and one small biological dataset; reduce parallel workers. Large atlas and dense-ablation runs may exceed a MacBook's RAM.
 - Do not mix old extracted folders with the current `Supplemental_Code.zip`.
+
+## Current convergence scripts (2026-10-11)
+
+The convergence workflow now uses fixed initial W, exactly as the primary analysis. Its original `Relative Change` and pre-update `Delta_Q` columns are retained. The audited full-dataset runner, 24-dataset launcher and original-metric exporter are in [analyses/convergence/](analyses/convergence/README.md). Use `--iterations 50` for the figure range.

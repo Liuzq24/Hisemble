@@ -27,7 +27,7 @@ import os
 from joblib import Parallel, delayed
 import fcntl
 warnings.filterwarnings("ignore")
-# --- 资源监控类 (保持不变) ---
+# Resource monitor.
 class MemoryMonitor: 
     def __init__(self, interval=0.1): 
         self.interval = interval 
@@ -40,7 +40,7 @@ class MemoryMonitor:
         while self.running:
             try:
                 mem = self.process.memory_info().rss
-                # 尝试获取子进程内存（因为SC3用了joblib并行）
+                # Include memory used by joblib child processes.
                 for child in self.process.children(recursive=True):
                     try:
                         mem += child.memory_info().rss
@@ -61,16 +61,14 @@ class MemoryMonitor:
         self.running = False
         self.monitor_thread.join()
         self.peak_mb = self.peak_memory / (1024 ** 2)
-        print(f"算法峰值内存使用: {self.peak_mb:.2f} MB")
+        print(f"Algorithm peak memory usage: {self.peak_mb:.2f} MB")
 
-# --- 辅助函数：用于将SC3的共识矩阵转为稀疏图以便画UMAP ---
+# Helper: convert the SC3 consensus matrix to a sparse UMAP graph.
 def sparsify_matrix_from_dense(dense_matrix, k_neighbors: int) -> csr_matrix:
-    """
-    将密集的共识矩阵转换为稀疏矩阵，仅保留每行最大的K个值。
-    """
+    """Convert a dense consensus matrix to a sparse matrix by retaining each row's largest k values."""
     n_samples = dense_matrix.shape[0]
-    # 使用 argsort 找到每行最大的 k 个索引
-    # 注意：SC3共识矩阵值越大越相似
+    # Use argsort to select the largest k entries in each row.
+    # Larger consensus values indicate greater similarity.
     indices = np.argsort(-dense_matrix, axis=1)[:, :k_neighbors]
     
     row_indices = np.repeat(np.arange(n_samples), k_neighbors)
@@ -80,24 +78,24 @@ def sparsify_matrix_from_dense(dense_matrix, k_neighbors: int) -> csr_matrix:
     sparse_mat = csr_matrix((data, (row_indices, col_indices)), shape=(n_samples, n_samples))
     return (sparse_mat + sparse_mat.T) / 2
 
-# --- SC3 核心逻辑 ---
+# SC3 consensus baseline.
 def run_one_kmeans(data, k, seed):
-    # n_init=10 这里的n_init可以适当降低以提高速度，原始SC3非常慢
-    # algorithm='elkan' 稍微快一点
+    # n_init=10 limits the number of k-means initializations.
+    # Use the Elkan k-means algorithm.
     kmeans = KMeans(n_clusters=k, n_init=10, random_state=seed, algorithm='elkan')
     return kmeans.fit_predict(data)
 
 def run_sc3_workflow(embeddings, n_clusters, n_runs=20, k_neighbors_for_graph=15):
     N = embeddings[0].shape[0]
-    print(f"  > [Debug] 细胞数量 N={N}, 目标簇数 k={n_clusters}")
+    print(f"  [Debug] Cells N={N}; target clusters k={n_clusters}")
 
     # 1. K-Means
-    print(f"  - 正在运行 K-Means (Runs={n_runs})...")
+    print(f"  - Running k-means (runs per view={n_runs})...")
     tasks = []
     for i, emb in enumerate(embeddings):
-        # 简单检查 embedding 形状
+        # Check embedding dimensions.
         if emb.shape[0] != N:
-            raise ValueError(f"Embedding {i} 维度不匹配: {emb.shape}")
+            raise ValueError(f"Embedding {i} has incompatible dimensions: {emb.shape}")
         for r in range(n_runs):
             tasks.append((emb, r + 42))
     
@@ -105,7 +103,7 @@ def run_sc3_workflow(embeddings, n_clusters, n_runs=20, k_neighbors_for_graph=15
     label_matrix = np.array(results).T 
     
     # 2. Consensus Matrix
-    print("  - 正在构建共识矩阵...")
+    print("  - Constructing the consensus matrix...")
     consensus_matrix = np.zeros((N, N), dtype=np.float32)
     n_total_runs = label_matrix.shape[1]
     
@@ -116,50 +114,50 @@ def run_sc3_workflow(embeddings, n_clusters, n_runs=20, k_neighbors_for_graph=15
     
     consensus_matrix /= n_total_runs
     
-    # Debug: 检查共识矩阵是否有意义
-    print(f"  > [Debug] 共识矩阵范围: Min={consensus_matrix.min():.4f}, Max={consensus_matrix.max():.4f}, Mean={consensus_matrix.mean():.4f}")
+    # Check the range of the consensus matrix.
+    print(f"  [Debug] Consensus range: min={consensus_matrix.min():.4f}, max={consensus_matrix.max():.4f}, mean={consensus_matrix.mean():.4f}")
     if consensus_matrix.mean() < 0.001 or consensus_matrix.mean() > 0.999:
-        print("  > [Warning] 共识矩阵似乎是空的或全满的，聚类可能失败！")
+        print("  Warning: the consensus matrix is nearly all zero or all one; clustering may fail.")
 
     # 3. Hierarchy
-    print("  - 正在进行层次聚类...")
-    # 距离矩阵：确保在 [0, 1] 之间
+    print("  - Running hierarchical clustering...")
+    # Keep the distance matrix within [0, 1].
     dist_mat = 1.0 - consensus_matrix
     dist_mat = np.clip(dist_mat, 0, 1) 
     
-    # Squareform: 将方阵转为 compressed vector，linkage 需要这个
+    # Convert the square distance matrix to the condensed vector required by linkage.
     dist_vec = squareform(dist_mat, checks=False)
     
     Z = linkage(dist_vec, method='average')
     labels = fcluster(Z, t=n_clusters, criterion='maxclust')
     
-    print(f"  > [Debug] 生成的簇标签种类数: {len(np.unique(labels))}")
-    print(f"  > [Debug] 前20个标签: {labels[:20]}")
+    print(f"  [Debug] Number of unique cluster labels: {len(np.unique(labels))}")
+    print(f"  [Debug] First 20 labels: {labels[:20]}")
 
     # 4. Graph for UMAP
-    print("  - 生成稀疏图用于可视化...")
+    print("  - Constructing a sparse graph for visualization...")
     sparse_graph = sparsify_matrix_from_dense(consensus_matrix, k_neighbors=k_neighbors_for_graph)
     
     return labels, sparse_graph
 
 
-# --- 主执行逻辑 ---
+# Main execution block.
 def main():
-    # --- 1. 参数解析 ---
-    parser = argparse.ArgumentParser(description="运行 SC3 (Consensus Clustering) 工作流")
+    # 1. Parse arguments.
+    parser = argparse.ArgumentParser(description="Run the SC3 consensus clustering baseline.")
     parser.add_argument('--datanames', type=str, nargs='+', required=False, 
-                        help="要处理的数据集名称")
+                        help="Dataset identifiers to process.")
     args = parser.parse_args()
     
-    # 固定超参数
-    N_RUNS = 20        # 每个视图运行 K-means 的次数
-    K_NEIGHBORS = 15   # 仅用于最后生成 UMAP 的稀疏图构建
+    # Fixed hyperparameters.
+    N_RUNS = 20        # Number of k-means runs per view.
+    K_NEIGHBORS = 15   # Used only to construct the sparse graph for UMAP.
     RANDOM_SEED = 42
     
     np.random.seed(RANDOM_SEED)
     os.environ['PYTHONHASHSEED'] = str(RANDOM_SEED)
 
-    # 预定义数据集
+    # Predefined datasets.
     all_datanames_predefined = [
     'Chen-2019-ATAC',
     'FCA_fetal_33184180_cerebellum',
@@ -181,8 +179,8 @@ def main():
 
     datanames_to_process = args.datanames if args.datanames else all_datanames_predefined
 
-    # --- 路径管理 ---
-    # 修改输出路径，避免覆盖 Hisemble 的结果
+    # Manage paths.
+    # Use a baseline-specific output directory to preserve Hisemble results.
     base_output_dir = '__HISEMBLE_RESULTS_ROOT__/SC3_final/'
     os.makedirs(base_output_dir, exist_ok=True)
     save_path = os.path.join(base_output_dir, f'sc3_results.csv')
@@ -190,11 +188,11 @@ def main():
     save_folder_umap = os.path.join(base_output_dir, 'UMAP_plots')
     os.makedirs(save_folder_umap, exist_ok=True)
     
-    # --- 循环处理 ---
+    # Process the selected datasets.
     for dataname in datanames_to_process:
-        print(f"\n{'='*20} 处理: {dataname} {'='*20}")
+        print(f"\n{'='*20} Processing: {dataname} {'='*20}")
         try:
-            # --- 加载数据并检查对齐 (CRITICAL FIX) ---
+            # Load data and verify cell alignment.
             path_basset = f'__HISEMBLE_DATA_ROOT__/ADATA/{dataname}_scBasset.pkl'
             path_snap = f'__HISEMBLE_DATA_ROOT__/ADATA/{dataname}_snap.pkl'
             path_lsi = f'__HISEMBLE_DATA_ROOT__/lsi_results/ADATA/{dataname}_lsi.pkl'
@@ -207,19 +205,19 @@ def main():
             print(f"  > [Check] snap shape:     {ad_snap.shape}")
             print(f"  > [Check] lsi shape:      {ad_lsi.shape}")
 
-            # 强校验：确保细胞名完全一致且顺序一致
+            # Check that cell identifiers and their order match exactly.
             if not (ad_scBasset.obs_names.equals(ad_snap.obs_names) and ad_snap.obs_names.equals(ad_lsi.obs_names)):
-                print("  !!!!!! 严重错误: 三个数据的细胞顺序(obs_names)不一致 !!!!!!")
-                print("  这会导致共识矩阵计算出随机噪声，ARI=0。尝试自动对齐...")
+                print("  Error: cell identifiers or their order differ among the three inputs.")
+                print("  Misaligned cells invalidate the consensus calculation. Attempting automatic alignment...")
                 
-                # 尝试取交集并对齐
+                # Align the intersection of the cell identifiers.
                 common_cells = ad_scBasset.obs_names.intersection(ad_snap.obs_names).intersection(ad_lsi.obs_names)
-                print(f"  > 对齐后细胞数: {len(common_cells)}")
+                print(f"  Cells after alignment: {len(common_cells)}")
                 ad_scBasset = ad_scBasset[common_cells].copy()
                 ad_snap = ad_snap[common_cells].copy()
                 ad_lsi = ad_lsi[common_cells].copy()
             else:
-                print("  > 数据对齐检查通过。")
+                print("  Cell-alignment check passed.")
 
             true_labels = ad_snap.obs.cell_type.to_numpy()
             true_cell_types = ad_snap.obs['cell_type'].nunique()
@@ -230,7 +228,7 @@ def main():
                 ad_lsi.obsm['X_lsi']
             ]
 
-            # --- 运行 SC3 ---
+            # Run SC3.
             with MemoryMonitor() as monitor:
                 start_time = time.time()
                 clusters, consensus_graph = run_sc3_workflow(
@@ -238,40 +236,40 @@ def main():
                 )
                 end_time = time.time()
 
-            # --- 构造 Adata 用于绘图 (修复 UMAP 警告) ---
-            # 重新读取一个模板 adata (为了保存 metadata)
-            # 注意：如果上面做了对齐裁切，这里必须也要裁切
+            # Construct an AnnData object for plotting.
+            # Reload an AnnData template to retain metadata.
+            # Apply the same cell subset used during alignment.
             adata_temp = sc.read_h5ad('__HISEMBLE_DATA_ROOT__/0.01_h5ad/%s_processed.h5ad'%dataname)
-            adata = adata_temp[ad_snap.obs_names].copy() # 确保和计算用的细胞一致
+            adata = adata_temp[ad_snap.obs_names].copy() # Ensure that the plotting object contains the same cells as the analysis.
 
-            # 注入 SC3 图
+            # Store the SC3 graph.
             consensus_graph = consensus_graph.astype(np.float32)
             adata.obsp['connectivities'] = consensus_graph
             
-            # 构造距离
+            # Construct graph distances.
             distances = consensus_graph.copy()
             distances.data = 1.0 - distances.data
             distances.data[distances.data < 0] = 0
             adata.obsp['distances'] = distances
 
-            # 欺骗 Scanpy，让它以为这是一个标准的邻接图
+            # Provide the neighbor-graph metadata expected by Scanpy.
             adata.uns['neighbors'] = {
                 'params': {
                     'n_neighbors': K_NEIGHBORS, 
-                    'method': 'umap', # 关键：欺骗 Scanpy
+                    'method': 'umap', # Configure Scanpy neighbor-graph metadata.
                     'metric': 'precomputed'
                 },
                 'connectivities_key': 'connectivities',
                 'distances_key': 'distances'
             }
 
-            # 运行 UMAP (现在应该会快很多，且不会有那个警告)
-            print("  - 计算 UMAP...")
+            # Run UMAP on the configured graph.
+            print("  - Computing UMAP...")
             sc.tl.umap(adata, min_dist=0.5, spread=1.0, random_state=RANDOM_SEED)
 
-            adata.obs['SC3'] = clusters.astype(str) # 转为字符型方便画图
+            adata.obs['SC3'] = clusters.astype(str) # Convert labels to strings for plotting.
             
-            # 保存图
+            # Save the figure.
             sc.pl.umap(adata, color=['cell_type'], show=False, title=f'{dataname} True Labels')
             plt.savefig(os.path.join(save_folder_umap, f'{dataname}_True.pdf'), bbox_inches='tight')
             plt.close()
@@ -284,14 +282,14 @@ def main():
             AMI = adjusted_mutual_info_score(true_labels, clusters)
             NMI = normalized_mutual_info_score(true_labels, clusters)
             HOM = homogeneity_score(true_labels, clusters)
-            print(f"  > 结果: ARI={ARI:.4f}, NMI={NMI:.4f}, Time={end_time-start_time:.2f}s")
+            print(f"  Results: ARI={ARI:.4f}, NMI={NMI:.4f}, time={end_time-start_time:.2f} s")
 
             output_columns = ['dataname', 'n_runs', 'ARI', 'AMI', 'NMI', 'HOM', 'Time_s', 'Mem_MB']
             
-            # 2. 构造字典
+            # 2. Construct the result dictionary.
             res_data = {
                 'dataname': dataname, 
-                'n_runs': N_RUNS,   # 之前缺失了这个字段
+                'n_runs': N_RUNS,   # Include the dataset identifier.
                 'ARI': ARI, 
                 'AMI': AMI,
                 'NMI': NMI,
@@ -301,24 +299,24 @@ def main():
             }
             
             res_df = pd.DataFrame([res_data])
-            # 3. 强制重排列，确保顺序一致
+            # 3. Enforce a consistent column order.
             res_df = res_df[output_columns]
 
-            # 4. 使用文件锁安全写入 (防止多进程同时写乱文件)
+            # 4. Lock the output file to prevent concurrent writes from interleaving.
             with open(save_path, 'a') as f:
-                fcntl.flock(f, fcntl.LOCK_EX) # 加锁
+                fcntl.flock(f, fcntl.LOCK_EX) # Acquire the file lock.
                 try:
-                    # 检查文件是否为空来决定是否写Header
+                    # Write the header only if the file is empty.
                     is_empty = os.path.getsize(save_path) == 0
                     res_df.to_csv(f, header=is_empty, index=False)
                 finally:
-                    fcntl.flock(f, fcntl.LOCK_UN) # 解锁
+                    fcntl.flock(f, fcntl.LOCK_UN) # Release the file lock.
             
-            # 保存 h5ad
+            # Save the h5ad file.
             adata.write(os.path.join(base_output_dir, f'{dataname}_result.h5ad'), compression='gzip')
 
         except Exception as e:
-            print(f"!!!!!! 出错: {e}")
+            print(f"Error: {e}")
             import traceback
             traceback.print_exc()
 

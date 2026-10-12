@@ -22,7 +22,7 @@ and `obsm['X_lsi']`, respectively. See each script for the expected annotation f
 and dataset list. Some benchmark scripts instead expect LSI under
 `ADATA/`; provide the appropriate input location for the selected variant. Do not
 assume that all variants use interchangeable filenames. `RESULTS_ROOT` holds
-`SNF_final/`, baseline-specific folders, and `downsampling/` outputs, which downstream
+`Hisemble_final/`, baseline-specific folders, and `downsampling/` outputs, which downstream
 scripts also read. Preprocessing scripts take h5ad/FASTA manifests; genome assemblies
 must match each dataset. Reference FASTA files are supplied under `GENOME_ROOT`.
 
@@ -71,3 +71,7 @@ Supply `mca_BoneMarrow_62216_Hisemble_result.h5ad` containing the saved Hisemble
 consensus graph in `.obsp['connectivities']` and annotations in `.obs['cell_type']`.
 The script reproduces the B-cell lineage DPT and ten-root sensitivity analysis
 reported in Supplemental Fig. S10 and Supplemental Table S8.
+
+## Current convergence scripts (2026-10-11)
+
+The convergence workflow now uses fixed initial W, exactly as the primary analysis. Its original `Relative Change` and pre-update `Delta_Q` columns are retained. The audited full-dataset runner, 24-dataset launcher and original-metric exporter are in [analyses/convergence/](analyses/convergence/README.md). Use `--iterations 50` for the figure range.

@@ -21,7 +21,7 @@ import anndata as ad
 from sklearn.metrics.pairwise import cosine_similarity
 import warnings
 warnings.filterwarnings("ignore")
-from utils import cluster_evaluation, overcorrection_score #从utils里面导入
+from utils import cluster_evaluation, overcorrection_score # Import shared utilities.
 from sklearn.metrics.pairwise import rbf_kernel, euclidean_distances
 from sklearn.metrics import adjusted_rand_score,adjusted_mutual_info_score,normalized_mutual_info_score, homogeneity_score
 from scipy.spatial.distance import pdist, squareform
@@ -87,62 +87,61 @@ true_cell_types = adata.obs['cell_type'].nunique()
 embedding = adata.obsm['X_pca']
 
 def run_sc3_proxy(embedding, n_clusters, n_runs=20):
-    """
-    Python 实现的 SC3 核心逻辑代理 (Consensus Clustering)
-    
-    Args:
-        embedding: (n_cells, n_features) 的低维矩阵 (如 PCA)
-        n_clusters: 目标聚类数 (k)
-        n_runs: 模拟 SC3 的多次运行次数 (默认20次足够模拟共识效果)
-    
-    Returns:
-        labels: 最终的聚类标签
-    """
-    n_cells = embedding.shape[0]
-    print(f"--- 开始运行 SC3 Proxy (Cells={n_cells}, K={n_clusters}) ---")
+    """SC3-style consensus clustering on a precomputed embedding.
 
-    # 1. 多次运行 K-Means (模拟 SC3 的集成步骤)
+Args:
+    embedding: Low-dimensional (n_cells, n_features) matrix, such as PCA.
+    n_clusters: Target number of clusters.
+    n_runs: Number of repeated k-means partitions (default: 20).
+
+Returns:
+    labels: Final cluster labels.
+"""
+    n_cells = embedding.shape[0]
+    print(f"--- Running the SC3 consensus baseline (cells={n_cells}, k={n_clusters}) ---")
+
+    # 1. Run repeated k-means to generate base partitions.
     print(f"Step 1: Running K-Means {n_runs} times...")
     labels_matrix = np.zeros((n_cells, n_runs), dtype=int)
     
     for i in range(n_runs):
-        # 改变 random_state 以获得不同的初始化结果
+        # Vary random_state to obtain different initializations.
         kmeans = KMeans(n_clusters=n_clusters, n_init=1, random_state=i, max_iter=300)
         labels_matrix[:, i] = kmeans.fit_predict(embedding)
     
-    # 2. 构建共识矩阵 (Consensus Matrix) - 内存瓶颈所在！
+    # 2. Construct the consensus matrix, the main memory bottleneck.
     print("Step 2: Building Consensus Matrix (Dense)...")
-    # Consensus_ij = (i 和 j 在多少次运行中被分到了同一类)
-    # 这是一个 N x N 的密集矩阵
+    # Consensus_ij is the fraction of runs assigning cells i and j to the same cluster.
+    # This is a dense N x N matrix.
     consensus_matrix = np.zeros((n_cells, n_cells), dtype=np.float32)
     
     for i in range(n_runs):
         lbl = labels_matrix[:, i]
-        # 广播计算：如果 lbl[u] == lbl[v] 则为 1
-        # 这一步内存消耗巨大，如果 n_cells > 3万，Mac可能会卡
+        # Broadcast label equality to create binary co-association values.
+        # Large cell counts can make the dense matrix exceed available memory.
         match_matrix = (lbl[:, None] == lbl[None, :]).astype(np.float32)
         consensus_matrix += match_matrix
         
-        # 手动回收垃圾，防止内存溢出
+        # Release temporary objects to limit memory use.
         del match_matrix
         gc.collect()
         
     consensus_matrix /= n_runs
     
-    # 3. 层次聚类 (Hierarchical Clustering)
+    # 3. Hierarchical clustering.
     print("Step 3: Hierarchical Clustering...")
-    # SC3 使用 Complete Linkage
-    # linkage 需要距离矩阵，我们用 1 - consensus 作为距离
-    # squareform 将 N x N 矩阵压缩为距离向量 (这是 scipy 的要求)
+    # Apply hierarchical clustering to the consensus distances.
+    # Use 1 - consensus as the distance required by linkage.
+    # squareform converts the N x N distance matrix to SciPy's condensed vector.
     try:
-        # 注意：这里也可能爆内存，因为 squareform 需要拷贝数据
+        # squareform copies data and may require substantial memory.
         dist_vec = squareform(1.0 - consensus_matrix, checks=False)
         Z = linkage(dist_vec, method='complete')
         
-        # 获取最终标签
+        # Extract the final labels.
         final_labels = fcluster(Z, t=n_clusters, criterion='maxclust')
         
-        # 标签标准化 (从0开始)
+        # Convert labels to zero-based indexing.
         return (final_labels - 1).astype(str)
         
     except MemoryError:

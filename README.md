@@ -79,9 +79,9 @@ All views must contain the same cells in the same row order, finite numeric valu
 
 ## Numerical revision analyses
 
-[analyses/](analyses/) contains component ablation/scaling, LSI neighborhood complementarity, eight-dataset ten-seed stability, three-dataset degraded-view robustness and numerical DPT lineage analysis. [results/](results/) contains the current Supplemental Tables S4–S9 and cell-level pseudotime. [workflows/](workflows/), [ANALYSIS_MAP.md](ANALYSIS_MAP.md) and [INPUTS_AND_ENVIRONMENTS.md](INPUTS_AND_ENVIRONMENTS.md) document preprocessing, representations, benchmarks and their separate input/environment requirements. Configure external paths with `prepare_workflows.py` and `config.example.json`.
+[analyses/](analyses/) contains component ablation/scaling, LSI neighborhood complementarity, eight-dataset ten-seed stability, three-dataset degraded-view robustness and numerical DPT lineage analysis. [results/](results/) contains the current Supplemental Tables S1–S10 and cell-level pseudotime. [workflows/](workflows/), [ANALYSIS_MAP.md](ANALYSIS_MAP.md) and [INPUTS_AND_ENVIRONMENTS.md](INPUTS_AND_ENVIRONMENTS.md) document preprocessing, representations, benchmarks and their separate input/environment requirements. Configure external paths with `prepare_workflows.py` and `config.example.json`.
 
-The journal archive is [supplemental_code/Supplemental_Code.zip](supplemental_code/Supplemental_Code.zip). The older `supplemental_code/reviewer_analyses` and `reviewer_results` directories are historical snapshots; use the root-level analyses and results for the current revision.
+The journal archive is [supplemental_code/Supplemental_Code.zip](supplemental_code/Supplemental_Code.zip). Use root-level analyses and results for the current revision. The earlier `supplemental_code/reviewer_analyses/` and `reviewer_results/` snapshots are retained as historical records.
 
 ## Installation without Docker
 
@@ -95,3 +95,7 @@ docker run --rm hisemble:reproduce \
 ```
 
 This runs the packaged tests, both examples, serial/parallel seed comparison, a graph-based DPT check and CLI checks. Details are recorded in [VALIDATION.md](reproducibility/VALIDATION.md).
+
+## Current convergence scripts (2026-10-11)
+
+The convergence workflow now uses fixed initial W, exactly as the primary analysis. Its original `Relative Change` and pre-update `Delta_Q` columns are retained. The audited full-dataset runner, 24-dataset launcher and original-metric exporter are in [analyses/convergence/](analyses/convergence/README.md). Use `--iterations 50` for the figure range.

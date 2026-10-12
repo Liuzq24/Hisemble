@@ -3,9 +3,10 @@ from pathlib import Path
 import anndata as ad,numpy as np,scanpy as sc
 from scipy.sparse import diags
 from sklearn.datasets import make_blobs
-root=Path('/opt/hisemble');analyses=root/'analyses'
+root=Path(__file__).resolve().parents[1];analyses=root/'analyses'
 def run(*args):subprocess.run([sys.executable,*map(str,args)],check=True)
 run('-m','unittest','discover','-s',root/'tests','-p','test_*.py')
+run(analyses/'convergence/test_runner_equivalence.py')
 with tempfile.TemporaryDirectory() as tmp:
  tmp=Path(tmp);run(root/'examples/quickstart_synthetic.py','--output-dir',tmp)
  run(root/'examples/run_hisemble_from_h5ad.py','--input',tmp/'synthetic_hisemble.h5ad','--output',tmp/'reloaded.h5ad','--keys','view_a,view_b','--metrics','gaussian,gaussian','--resolution','0.5')
@@ -34,4 +35,4 @@ with tempfile.TemporaryDirectory() as tmp:
  a.obsp['connectivities']=g;a.uns['neighbors']={'connectivities_key':'connectivities','distances_key':'distances','params':{'method':'Hisemble consensus graph','n_neighbors':15}};a.uns['iroot']=0
  sc.tl.diffmap(a,n_comps=15);sc.tl.dpt(a,n_dcs=10,n_branchings=0);assert np.isfinite(a.obs['dpt_pseudotime']).all()
  for name in ['component_ablation.py','seed_stability.py','seed_stability_parallel.py','degraded_view_analysis.py','lsi_neighbor_analysis.py','lineage_trajectory_analysis.py']:run(analyses/name,'--help')
-print('PASS: all packaged tests, synthetic and AnnData examples, serial/parallel equality, finite graph-based DPT, six CLI entry points')
+print('PASS: all packaged tests (9 core/API + 4 convergence), synthetic and AnnData examples, serial/parallel equality, finite graph-based DPT, six CLI entry points')

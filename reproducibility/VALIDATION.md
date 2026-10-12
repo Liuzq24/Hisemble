@@ -1,28 +1,21 @@
-# Local validation of the current revision
+# Local verification: 2026-10-11
 
-Validation: 2026-10-06, America/Toronto (2026-10-07 UTC), on an Apple Silicon Mac using OrbStack Docker, Linux/arm64 and Python 3.10.13. Both the journal code and the updated GitHub checkout were built from their supplied Dockerfiles. The full resolved Python environment is recorded in `requirements-resolved-linux-arm64.txt`.
+## Algorithm and convergence workflows
 
-The submitted archive SHA-256 is `a486c2af63620685a6579ff5bae6e5eb59c3e49887b1edb0e0c604a674d348db`. Its extracted source files match the ZIP; all its recorded file checksums passed. The current four computational modules (`core.py`, `api.py`, `graph.py`, `cluster.py`) are unchanged from the prior repository commit `5df28c7`.
+The live convergence workflows use fixed initial affinity matrices W, followed by the primary analysis's sparsification and normalization. The original P metric and pre-update Q timing are preserved. The primary numerical core is unchanged.
 
-Passed checks:
+Eighteen comparisons of the two live workflows against the primary analysis passed, covering mixed floating-point dtypes, tied rows and sparse zero rows at 20, 21 and 50 iterations. Final and T20 checkpoint matrices have zero differing stored entries, and the original P/Q metrics agree with the audited diagnostic runner. The original-metric exporter was also checked against existing logs from 24 datasets: 3,600 T1-T50 records matched the approved figure data. Convergence numerical results and server logs are not included in this code archive.
 
-1. All nine journal-archive tests and all eleven GitHub tests. The two additional GitHub tests exercise all six permutations directly in the production fusion core, both with diffusion and with zero iterations. The separate production check had maximum error 1.1102230246251565e-16 against tolerance 1e-12.
-2. Synthetic example: 180 cells, four clusters, 180 × 180 connectivity graph, 7,372 nonzeros. Reloading the same embeddings and parameters produced exactly equal graphs and clustering labels, with unchanged cell identifiers. These numerical assertions are now part of the GitHub verification script.
-3. Exact equality of serial and two-worker parallel seed records on a 90-cell synthetic fixture, seeds 0, 42 and 101.
-4. Finite Scanpy diffusion pseudotime on a connected sparse graph; six current numerical-analysis CLI entry points accepted `--help`.
-5. Normal package installation succeeded and `hisemble` imported from `site-packages` with the source `PYTHONPATH` removed and Python isolated mode enabled.
-6. Every code cell in both original notebooks executed, including plotting (headless Matplotlib), using the downloaded GitHub demonstration inputs: spatial data, 1,258 cells, seven clusters, 98,328 graph nonzeros; single-cell data, 13,671 cells, 35 clusters, 1,387,489 graph nonzeros. These are execution results, not a claim of agreement with independently supplied biological ground truth.
-7. Workflow preparation generated 26 configured files; current Python sources and notebook JSON parsed successfully. Preparation does not run upstream analyses.
+## English text and method names
 
-Repeat the package checks with:
+All Chinese comments, docstrings, run messages and command-line help were translated into English (750 occurrences across 22 Python files). Historical SNF names referring to Hisemble were updated in function calls, variables, output fields, filenames and result directories. The CHAI-SNF baseline retains its actual method name. Computational expressions and numerical constants were structurally checked before and after editing. Nine direct before/after fusion-helper comparisons produced identical matrices and convergence history.
 
-```bash
-docker build -f reproducibility/Dockerfile -t hisemble:reproduce .
-docker run --rm hisemble:reproduce python /opt/hisemble/reproducibility/verify_installation.py
-```
+New Hisemble output names include `Hisemble_final/`, `hisemble_fixed_params_results.csv`, `hisemble_sensitivity_k_neighbors.csv`, `Hisemble_Time_s` and `Hisemble_Peak_Mem_MB`.
 
-The current root-level analyses/results and bundled journal ZIP supersede the older historical `supplemental_code/reviewer_analyses` and `reviewer_results` snapshots. The original notebooks and demonstration data remain available. Current package exports follow the journal archive; the older optional storage/Seurat helper exports were removed in that archive.
+## Package checks
 
-## Scope
+The current sources passed 9 core/API tests, 4 convergence-equivalence tests, synthetic graph and cluster assertions, an exact H5AD reload comparison, serial/parallel seed equality, finite graph-based DPT, and six analysis CLI checks in the reproduction container. Supplemental Tables S1-S10 match the submitted CSV files byte for byte.
 
-Full manuscript benchmarks, all Supplemental Tables S4–S9 and the MCA Bone Marrow lineage result were not regenerated in this local run: their external precomputed representations and saved consensus graph were not available in the located revision inputs. Upstream encoder training, GPU workflows, native macOS dependency installation and other architectures were not tested. Archived reference tables are not substitutes for newly executed experiments. Historical validation records are not evidence for this run.
+These checks use synthetic fixtures and previously generated results; they do not rerun the full biological benchmarks.
+
+Run `python analyses/convergence/test_runner_equivalence.py` for the convergence checks. Run `python reproducibility/verify_installation.py` in the documented container environment for the complete package checks.

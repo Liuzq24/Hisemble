@@ -24,7 +24,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import warnings
 warnings.filterwarnings("ignore")
 import tensorflow as tf
-from utils import cluster_evaluation, overcorrection_score #从utils里面导入
+from utils import cluster_evaluation, overcorrection_score # Import shared utilities.
 from sklearn.metrics.pairwise import rbf_kernel, euclidean_distances
 from sklearn.metrics import adjusted_rand_score,adjusted_mutual_info_score,normalized_mutual_info_score, homogeneity_score
 from scipy.spatial.distance import pdist, squareform
@@ -74,9 +74,9 @@ class MemoryMonitor:
     def _monitor(self):
         while self.running:
             try:
-                # 获取当前进程及其子进程的内存
+                # Measure memory used by the current process and its children.
                 mem = self.process.memory_info().rss
-                # 尝试获取子进程内存（对于并行任务很重要）
+                # Include child-process memory for parallel tasks.
                 for child in self.process.children(recursive=True):
                     try:
                         mem += child.memory_info().rss
@@ -100,13 +100,13 @@ class MemoryMonitor:
         self.peak_mb = self.peak_memory / (1024 ** 2)
 
 
-def SNF(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
+def Hisemble(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
     num_views = len(W_list)
     n_samples = W_list[0].shape[0]
     P_list = [normalize_sparse(W) for W in W_list]
     k_retained = k_neighbors * 2
     for iter_num in range(n_iterations):
-        print(f"  - 第 {iter_num + 1}/{n_iterations} 次迭代...")
+        print(f"  - Iteration {iter_num + 1}/{n_iterations}...")
         P_updated_list = []
         for i in range(num_views):
             sum_P_others = csr_matrix((n_samples, n_samples), dtype=np.float32)
@@ -133,7 +133,7 @@ def run_hisemble_workflow(embeddings):
     graphs.append(build_knn_graph_chunked_cpu(embeddings[1], k_neighbors=K_NEIGHBORS, metric='gaussian', random_seed=RANDOM_SEED))
     graphs.append(build_knn_graph_chunked_cpu(embeddings[2], k_neighbors=K_NEIGHBORS, metric='cosine', random_seed=RANDOM_SEED))
 
-    fused_network = SNF(W_list=graphs, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
+    fused_network = Hisemble(W_list=graphs, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
     del graphs
 
     sources, targets = fused_network.nonzero()
@@ -146,21 +146,20 @@ def run_hisemble_workflow(embeddings):
     return clusters
 
 def run_one_kmeans(data, k, seed):
-    # n_init=1000 是为了严格复现 SC3 的高精度要求，但这很慢。
+    # n_init=1000 uses many k-means initializations and can be slow.
     kmeans = KMeans(n_clusters=k, n_init=1000, random_state=seed, algorithm='elkan')
     return kmeans.fit_predict(data)
 
 def run_sc3_workflow(embeddings, n_clusters=true_cell_types, n_runs=20):
-    """
-    模拟 SC3 的核心瓶颈：
-    1. 对每个嵌入运行多次 K-Means (并行)
-    2. 构建 N x N 的密集共识矩阵 (内存杀手)
-    """
+    """SC3-style consensus baseline on precomputed embeddings.
+1. Run repeated k-means on each embedding in parallel.
+2. Construct the dense N x N co-association matrix.
+"""
     N = embeddings[0].shape[0]
     all_labels = []
 
-    # 1. 并行运行 K-means
-    # 对三个嵌入，每个跑 n_runs 次，总共 3 * n_runs 次
+    # 1. Run k-means in parallel.
+    # Run n_runs partitions per embedding, giving 3 * n_runs for three views.
     tasks = []
     for emb in embeddings:
         for i in range(n_runs):
@@ -172,23 +171,23 @@ def run_sc3_workflow(embeddings, n_clusters=true_cell_types, n_runs=20):
     )
     label_matrix = np.array(results).T # Shape: (N, 3*n_runs)
 
-    # 2. 构建共识矩阵 (这里是内存爆炸的地方)
+    # 2. Construct the dense consensus matrix, which dominates memory use.
     consensus_matrix = np.zeros((N, N), dtype=np.float32)
     
-    # 逐列计算以节省一点内存，但最终必须持有 N x N 矩阵
+    # Accumulate partitions one at a time; the final N x N matrix remains dense.
     n_total_runs = label_matrix.shape[1]
     for i in range(n_total_runs):
         lbl = label_matrix[:, i]
-        # 广播计算：相等为1，不等为0
-        # 这一步会生成临时的 N x N bool 矩阵
+        # Broadcast label equality: one for a shared cluster and zero otherwise.
+        # This step creates a temporary N x N Boolean matrix.
         mat = (lbl[:, None] == lbl[None, :])
         consensus_matrix += mat
     
     consensus_matrix /= n_total_runs
     
-    # 3. 层次聚类 (需要距离矩阵)
+    # 3. Hierarchical clustering requires a distance matrix.
     
-    # SC3 使用 1-consensus 作为距离
+    # Use 1 - consensus as the clustering distance.
     
     Z = linkage(squareform(1 - consensus_matrix, checks=False), method='complete')
     labels = fcluster(Z, t=n_clusters, criterion='maxclust')
@@ -196,89 +195,88 @@ def run_sc3_workflow(embeddings, n_clusters=true_cell_types, n_runs=20):
     return labels
 
 def dense_snf(wall_list, k=20, t=20):
-    # 1. 归一化 (计算 P 矩阵)
+    # 1. Normalize the affinity matrices to obtain P.
     def normalize(w):
         row_sums = w.sum(axis=1)
-        row_sums[row_sums == 0] = 1 # 避免除以0
+        row_sums[row_sums == 0] = 1 # Avoid division by zero.
         p = w / row_sums[:, np.newaxis]
-        p = (p + p.T) / 2 # 保持对称
+        p = (p + p.T) / 2 # Preserve symmetry.
         return p
 
-    # 2. 计算 S 矩阵 (KNN 核心区域)
+    # 2. Construct the local k-NN matrix S.
     def dominate_set(w, k):
         n = w.shape[0]
         s = np.zeros_like(w)
-        # 对每一行，只保留最大的 K 个值
+        # Retain the largest k values in each row.
         for i in range(n):
             indices = np.argsort(w[i, :])[-k:]
             s[i, indices] = w[i, indices]
-        # 归一化 S
+        # Normalize S.
         return normalize(s)
 
-    # 初始化
+    # Initialize the matrices.
     P = [normalize(w) for w in wall_list]
     S = [dominate_set(w, k) for w in wall_list]
     num_views = len(wall_list)
     
-    # 迭代更新 (Cross Diffusion)
+    # Iterative cross-diffusion updates.
     for _ in range(t):
         P_next = []
         for v in range(num_views):
-            # 计算其他视图的平均 P
+            # Average the P matrices from the other views.
             others = [P[i] for i in range(num_views) if i != v]
             P_sum = sum(others) / (num_views - 1)
             
-            # 核心公式: P_new = S * P_others * S^T
-            # 这里是密集矩阵乘法，极度消耗计算资源
+            # Update formula: P_new = S * P_others * S^T.
+            # Dense matrix multiplication can be computationally expensive.
             P_new = S[v].dot(P_sum).dot(S[v].T)
             P_next.append(P_new)
         P = P_next
 
-    # 最终融合
+    # Construct the final fused matrix.
     return sum(P) / num_views
 
 def run_spectral_clustering_njw(affinity_matrix, n_clusters=15):
-    """
-    严格按照 CHAI 论文引用的 NJW (2002) 算法执行谱聚类。
-    输入: affinity_matrix (N x N 密集矩阵)
-    """
+    """Run the NJW (2002) spectral clustering algorithm used by CHAI.
+Input: affinity_matrix, a dense N x N matrix.
+"""
     import numpy as np
     from scipy.cluster.vq import kmeans2
-    # 使用 eigh 处理对称矩阵的特征分解，比 eig 更快且数值更稳定
+    # Use eigh for the symmetric eigendecomposition.
     from scipy.linalg import eigh 
 
-    # 1. 计算度矩阵 D 的逆平方根 (D^-1/2)
+    # 1. Calculate the inverse square root of the degree matrix.
     # D_ii = sum(W_ij)
     row_sums = np.array(affinity_matrix.sum(axis=1)).flatten()
-    # 避免除以0
+    # Avoid division by zero.
     row_sums[row_sums == 0] = 1e-10
     d_inv_sqrt = np.power(row_sums, -0.5)
     
-    # 将向量转换为对角矩阵 (注意：生成 N x N 对角矩阵非常占内存)
-    # 为了节省一点点内存，利用广播机制计算 L = D^-1/2 * W * D^-1/2
+    # An explicit N x N diagonal matrix would require substantial memory.
+    # Use broadcasting to compute D^-1/2 * W * D^-1/2.
     # L_ij = W_ij * d_inv_sqrt[i] * d_inv_sqrt[j]
     
-    # 2. 计算归一化拉普拉斯矩阵 L
-    # 这一步涉及 N x N 矩阵的逐元素乘法
+    # 2. Calculate the normalized affinity matrix L.
+    # This step performs elementwise operations on an N x N matrix.
     L = affinity_matrix * d_inv_sqrt[:, np.newaxis] * d_inv_sqrt[np.newaxis, :]
     
-    # 3. 特征分解 (Eigendecomposition) - !!! 真正的性能瓶颈 !!!
-    # 我们需要前 k 个最大的特征值对应的特征向量
-    # subset_by_index=[N-k, N-1] 获取最大的 k 个
+    # 3. Eigendecomposition is a major computational bottleneck.
+    # Select eigenvectors corresponding to the largest k eigenvalues.
+    # subset_by_index=[N-k, N-1] selects the largest k eigenvalues.
     N = L.shape[0]
-    # eigh 是针对 Hermitian/Symmetric 矩阵的，比 eig 快，但在 N 很大时依然非常慢
-    # 这步是 O(N^3) 的时间复杂度
+    # eigh exploits symmetry but remains expensive for large matrices.
+    # Dense eigendecomposition can require O(N^3) time.
     evals, evecs = eigh(L, subset_by_index=[N-n_clusters, N-1])
     
-    # 4. 行归一化 (Unit Length)
-    # 将特征向量矩阵的每一行归一化为单位长度
+    # 4. Normalize rows to unit length.
+    # Normalize each row of the eigenvector matrix.
     row_norms = np.linalg.norm(evecs, axis=1)
     row_norms[row_norms == 0] = 1e-10
     X_normalized = evecs / row_norms[:, np.newaxis]
     
-    # 5. K-Means 聚类
-    # 对归一化后的特征向量进行聚类
-    # minit='++' 对应 k-means++ 初始化
+    # 5. K-means clustering.
+    # Cluster the normalized eigenvectors.
+    # minit='++' uses k-means++ initialization.
     centroids, labels = kmeans2(X_normalized, n_clusters, minit='++')
     
     return labels
@@ -290,15 +288,15 @@ def run_chai_proxy(embeddings, method='AvgSim'):
         labels = KMeans(n_clusters=true_cell_types, n_init=10).fit_predict(emb)
         labels_list.append(labels)
         
-    # 2. 构建二进制相似度矩阵 (CHAI 的核心步骤，也是瓶颈)
+    # 2. Construct binary co-association matrices for CHAI.
     binary_matrices = []
     for lbl in labels_list:
-        # 这一步会生成 N x N 的密集矩阵！
-        # 使用 bool 类型稍微省点内存，但依然是 N^2
+        # This step creates a dense N x N matrix.
+        # Boolean storage reduces constants but still requires O(N^2) memory.
         mat = (lbl[:, None] == lbl[None, :])
         binary_matrices.append(mat.astype(np.float32))
         
-    # 3. 融合
+    # 3. Fuse the matrices.
     if method == 'AvgSim':
         fused_matrix = sum(binary_matrices) / len(binary_matrices)
     elif method == 'SNF':
@@ -315,7 +313,7 @@ sample_sizes = [10000, 20000, 50000, 80000, 100000, 150000, 180000]
 results = []
 for n in sample_sizes:
     try:
-        # 下采样
+        # Downsample cells.
         indices = np.random.choice(MAX_CELLS, n, replace=False)
         embs_subset = [FULL_EMB_1[indices], FULL_EMB_2[indices], FULL_EMB_3[indices]]
         print("  Running CHAI(AvgSim)...")
@@ -329,28 +327,28 @@ for n in sample_sizes:
         }
         results.append(res_avg)
         
-        # 成功后立刻保存
+        # Save successful results immediately.
         pd.DataFrame([res_avg]).to_csv(save_path, mode='a', header=not os.path.exists(save_path), index=False)
         print(f"  [Saved] CHAI(AvgSim) result for {n} cells.")
     except MemoryError:
         print("    CHAI(AvgSim): Memory Error (OOM)!")
         err_res = {'Method': 'CHAI(AvgSim)', 'Cells': n, 'Time(s)': None, 'Memory(MB)': None}
         results.append(err_res)
-        # 报错也要保存记录
+        # Record failures as well as successful runs.
         pd.DataFrame([err_res]).to_csv(save_path, mode='a', header=not os.path.exists(save_path), index=False)
     except Exception as e:
         print(f"    CHAI(AvgSim) Error: {e}")
-        if "Array is too big" in str(e): # numpy 的报错
+        if "Array is too big" in str(e): # Handle NumPy errors.
              err_res = {'Method': 'CHAI(AvgSim)', 'Cells': n, 'Time(s)': None, 'Memory(MB)': None}
              results.append(err_res)
-             # 报错也要保存记录
+             # Record failures as well as successful runs.
              pd.DataFrame([err_res]).to_csv(save_path, mode='a', header=not os.path.exists(save_path), index=False)
             
     try:
         print("  Running CHAI(SNF)...")
         with MemoryMonitor() as monitor:
             start = time.time()
-            run_chai_proxy(embs_subset, method = 'SNF') # 减少 runs 加速测试
+            run_chai_proxy(embs_subset, method = 'SNF') # Reduce the number of runs for a faster test.
             end = time.time()
         res_snf = {
             'Method': 'CHAI(SNF)', 'Cells': n, 
@@ -358,7 +356,7 @@ for n in sample_sizes:
         }
         results.append(res_snf)
 
-        # 成功后立刻保存
+        # Save successful results immediately.
         pd.DataFrame([res_snf]).to_csv(save_path, mode='a', header=not os.path.exists(save_path), index=False)
         print(f"  [Saved] CHAI(SNF) result for {n} cells.")
 
@@ -366,14 +364,14 @@ for n in sample_sizes:
         print("    CHAI(SNF): Memory Error (OOM)!")
         err_res = {'Method': 'CHAI(SNF)', 'Cells': n, 'Time(s)': None, 'Memory(MB)': None}
         results.append(err_res)
-        # 报错也要保存记录
+        # Record failures as well as successful runs.
         pd.DataFrame([err_res]).to_csv(save_path, mode='a', header=not os.path.exists(save_path), index=False)
 
     except Exception as e:
         print(f"    CHAI(SNF) Error: {e}")
-        if "Array is too big" in str(e): # numpy 的报错
+        if "Array is too big" in str(e): # Handle NumPy errors.
              err_res = {'Method': 'CHAI(SNF)', 'Cells': n, 'Time(s)': None, 'Memory(MB)': None}
              results.append(err_res)
-             # 报错也要保存记录
+             # Record failures as well as successful runs.
              pd.DataFrame([err_res]).to_csv(save_path, mode='a', header=not os.path.exists(save_path), index=False)
 print("\nAll done.")

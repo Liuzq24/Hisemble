@@ -4,44 +4,42 @@ import episcanpy as epi
 import numpy as np
 
 def process_h5ad_file(input_path, output_dir, filter_ratio):
-    """
-    处理单个h5ad文件：二值化、特征筛选，并保存结果。
-    """
+    """Binarize and filter features in one h5ad file, then save the result."""
     try:
         filename = os.path.basename(input_path)
-        print(f"--- 开始处理: {filename} ---")
+        print(f"--- Processing: {filename} ---")
 
         adata = sc.read(input_path)
-        print(f"原始维度 (细胞 x 特征): {adata.shape}")
+        print(f"Original shape (cells x features): {adata.shape}")
         if adata.shape[0] == 0 or adata.shape[1] == 0:
-            print("警告: 文件为空或维度不正确，跳过处理。")
+            print("Warning: empty input or invalid dimensions; skipping this file.")
             return False
 
-        print("步骤 1/2: 正在进行数据二值化...")
+        print("Step 1/2: binarizing the data...")
         epi.pp.binarize(adata)
 
         min_cells = np.ceil(filter_ratio * adata.shape[0])
-        print(f"步骤 2/2: 筛选特征，保留在 >= {int(min_cells)} 个细胞中存在的特征...")
+        print(f"Step 2/2: retaining features detected in at least {int(min_cells)} cells...")
         epi.pp.filter_features(adata, min_cells=min_cells)
         
-        print(f"处理后维度 (细胞 x 特征): {adata.shape}")
+        print(f"Processed shape (cells x features): {adata.shape}")
 
         base_name, ext = os.path.splitext(filename)
         output_filename = f"{base_name}_processed{ext}"
         output_path = os.path.join(output_dir, output_filename)
         
-        print(f"正在保存到: {output_path}")
+        print(f"Saving to: {output_path}")
         adata.write(output_path, compression='gzip')
 
-        print(f"--- {filename} 处理成功 ---\n")
+        print(f"--- {filename} processed successfully ---\n")
         return True
 
     except Exception as e:
-        print(f"!!! 处理文件 {input_path} 时发生错误: {e} !!!\n")
+        print(f"Error while processing {input_path}: {e}\n")
         return False
 
 # ===================================================================
-#                      主程序执行部分
+# Main execution block.
 # ===================================================================
 if __name__ == "__main__":
     file_paths_to_process = [
@@ -52,23 +50,23 @@ if __name__ == "__main__":
     filter_ratio = 0.01
 
     
-    print("--- 批量处理脚本启动 ---")
-    print(f"将从列表中处理 {len(file_paths_to_process)} 个文件。")
-    print(f"输出目录: {output_directory}")
-    print(f"特征筛选比例: {filter_ratio * 100}%\n")
+    print("--- Starting batch processing ---")
+    print(f"Processing {len(file_paths_to_process)} files from the input list.")
+    print(f"Output directory: {output_directory}")
+    print(f"Feature-filtering fraction: {filter_ratio * 100}%\n")
 
     os.makedirs(output_directory, exist_ok=True)
     
     failed_files = []
     
     if not file_paths_to_process or 'path/to/your/data' in file_paths_to_process[0]:
-        print("错误：请先编辑脚本，在 `file_paths_to_process` 列表中填入您的实际文件路径。")
+        print("Error: populate file_paths_to_process with your input file paths before running the script.")
     else:
         for file_path in file_paths_to_process:
-            # 检查文件是否存在，避免不必要的错误
+            # Check that the input file exists before processing.
             if not os.path.exists(file_path):
-                print(f"!!! 文件未找到，跳过: {file_path} !!!\n")
-                failed_files.append(f"{file_path} (文件不存在)")
+                print(f"File not found; skipping: {file_path}\n")
+                failed_files.append(f"{file_path} (file not found)")
                 continue
 
             success = process_h5ad_file(file_path, output_directory, filter_ratio)
@@ -76,17 +74,17 @@ if __name__ == "__main__":
             if not success:
                 failed_files.append(file_path)
 
-    # --- 最终报告 ---
+    # Final report.
     print("="*50)
-    print("批量处理完成！")
+    print("Batch processing completed.")
     total_files = len(file_paths_to_process)
     success_count = total_files - len(failed_files)
-    print(f"总结: 共处理 {total_files} 个文件，{success_count} 个成功，{len(failed_files)} 个失败。")
+    print(f"Summary: {total_files} files; {success_count} succeeded; {len(failed_files)} failed.")
     
     if failed_files:
-        print("\n以下文件处理失败或未找到，请检查：")
+        print("\nThe following files failed or were not found:")
         for f in failed_files:
             print(f"- {f}")
     else:
-        print("\n所有文件均已成功处理！")
+        print("\nAll files were processed successfully.")
     print("="*50)

@@ -12,8 +12,8 @@ from scipy.sparse import issparse
 import scanpy as sc
 import anndata 
 import episcanpy.api as epi
-import time  # 引入时间库
-import psutil # 引入psutil库
+import time  # Import timing utilities.
+import psutil # Import process-memory monitoring utilities.
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 import seaborn as sns
@@ -29,19 +29,19 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import snapatac2 as snap
 from pathlib import Path
 
-# --- 辅助函数 ---
+# Helper functions.
 def find_best_leiden_resolution(adata, true_cell_types, low=0.1, high=5.0, tolerance=0.01, key_prefix='leiden_res', random_seed=42):
 
     low_n_clusters = sc.tl.leiden(adata, resolution=low, copy=True, random_state=random_seed).obs['leiden'].nunique()
     high_n_clusters = sc.tl.leiden(adata, resolution=high, copy=True, random_state=random_seed).obs['leiden'].nunique()
 
-    # 检查边界情况
+    # Check boundary cases.
     if high_n_clusters <= true_cell_types:
-        print(f"警告: resolution上限 {high} 产生的簇数 ({high_n_clusters}) 不大于目标簇数 ({true_cell_types})。直接使用 resolution={high}。")
+        print(f"Warning: the upper resolution {high} produces {high_n_clusters} clusters, no more than the target {true_cell_types}. Using resolution={high}.")
         sc.tl.leiden(adata, resolution=high, key_added=f'{key_prefix}_best', random_state=random_seed)
         return high
     if low_n_clusters >= true_cell_types:
-        print(f"警告: resolution下限 {low} 产生的簇数 ({low_n_clusters}) 不小于目标簇数 ({true_cell_types})。直接使用 resolution={low}。")
+        print(f"Warning: the lower resolution {low} produces {low_n_clusters} clusters, no fewer than the target {true_cell_types}. Using resolution={low}.")
         sc.tl.leiden(adata, resolution=low, key_added=f'{key_prefix}_best', random_state=random_seed)
         return low
 
@@ -53,7 +53,7 @@ def find_best_leiden_resolution(adata, true_cell_types, low=0.1, high=5.0, toler
         sc.tl.leiden(adata, resolution=mid, key_added=f'leiden_{mid:.4f}', random_state=random_seed)
         num_clusters = adata.obs[f'leiden_{mid:.4f}'].nunique()
 
-        # 记录与目标簇数最接近的分辨率
+        # Track the resolution with the closest cluster count to the target.
         if abs(num_clusters - true_cell_types) < abs(best_n_clust - true_cell_types):
             best_res = mid
             best_n_clust = num_clusters
@@ -63,23 +63,25 @@ def find_best_leiden_resolution(adata, true_cell_types, low=0.1, high=5.0, toler
         elif num_clusters > true_cell_types:
             high = mid
         else:
-            print(f"找到精确匹配！最佳分辨率: {mid:.4f}，簇数: {num_clusters}")
+            print(f"Exact match found. Best resolution: {mid:.4f}; clusters: {num_clusters}.")
             sc.tl.leiden(adata, resolution=mid, key_added=f'{key_prefix}_best', random_state=random_seed)
             return mid
 
-    print(f"搜索结束。最佳分辨率为 {best_res:.4f}，产生 {best_n_clust} 个簇 (目标为 {true_cell_types})。")
+    print(f"Search completed. Best resolution: {best_res:.4f}; clusters: {best_n_clust}; target: {true_cell_types}.")
     sc.tl.leiden(adata, resolution=best_res, key_added=f'{key_prefix}_best', random_state=random_seed)
     return best_res
 
 
 def Snapatac(inputdata, dataname, umapsave, savedata, savemetric):
-    """
-    inputdata: 预处理后数据
-    dataname: 对数据的称呼，用于保存数据时记录数据名称
-    saveumap: 用于保存UMAP
-    savedata: 保存处理后数据的文件夹
-    savemetric: 保存指标的路径
-    """ 
+    """Process preprocessed input data and save dataset-specific outputs.
+
+Args:
+    inputdata: Preprocessed data.
+    dataname: Dataset identifier used in output filenames.
+    saveumap: UMAP output directory.
+    savedata: Processed-data output directory.
+    savemetric: Metrics output path.
+""" 
     ad = inputdata
     from scipy.sparse import csc_matrix
     ad.X = ad.X.tocsr()
@@ -88,16 +90,16 @@ def Snapatac(inputdata, dataname, umapsave, savedata, savemetric):
     start_time_spectral = time.perf_counter()
     snap.tl.spectral(ad, features = None)
     end_time_spectral = time.perf_counter()
-    # 记录 spectral 执行后的内存
+    # Record memory usage after spectral embedding.
     mem_after_spectral_mb = process.memory_info().rss / (1024 * 1024)
 
-    # 计算该步骤的耗时和内存增量
+    # Calculate elapsed time and the memory increase for this step.
     elapsed_time_spectral_s = end_time_spectral - start_time_spectral
     peak_memory_spectral_mb = mem_after_spectral_mb - mem_before_spectral_mb
 
-    print(f"--- 性能监控 [snap.tl.spectral on {dataname}] ---")
-    print(f"耗时: {elapsed_time_spectral_s:.2f} 秒")
-    print(f"内存峰值增量: {peak_memory_spectral_mb:.2f} MB")
+    print(f"--- Performance monitoring [snap.tl.spectral on {dataname}] ---")
+    print(f"Elapsed time: {elapsed_time_spectral_s:.2f} s")
+    print(f"Peak memory increase: {peak_memory_spectral_mb:.2f} MB")
     print(f"-------------------------------------------")
     sc.pp.neighbors(ad, n_neighbors=15, use_rep="X_spectral")
     snap.tl.umap(ad, random_state=None)
@@ -112,7 +114,7 @@ def Snapatac(inputdata, dataname, umapsave, savedata, savemetric):
     #snap.pp.knn(ad)
     true_cell_types = ad.obs['cell_type'].nunique()
     best_res = find_best_leiden_resolution(ad, true_cell_types)
-    print(f"最佳的Leiden聚类分辨率是：{best_res}")
+    print(f"Best Leiden clustering resolution: {best_res}")
 
     import pickle
     pkl_file_name = savedata+dataname+"_snap.pkl" 
@@ -130,13 +132,13 @@ def Snapatac(inputdata, dataname, umapsave, savedata, savemetric):
     
     import scib
     if 'batch' in ad.obs.columns:
-        # 如果存在 'batch' 标签，计算各项指标
+        # Calculate integration metrics when batch labels are available.
         GraphcLISI = scib.me.clisi_graph(ad, label_key="batch", type_="embed", use_rep="X_spectral")
         batchASW = scib.me.silhouette_batch(ad, batch_key="batch", label_key="cell_type", embed="X_spectral", verbose=False)
         Graph_connectivity = scib.me.graph_connectivity(ad, label_key="cell_type")
         ilisi_graph = scib.me.ilisi_graph(ad, batch_key="batch", type_="embed", use_rep="X_spectral", scale=False)
     else:
-        # 如果不存在 'batch' 标签，将所有指标设置为 0
+        # Set batch-related metrics to zero when batch labels are unavailable.
         GraphcLISI = 0
         batchASW = 0
         Graph_connectivity = 0
@@ -193,11 +195,11 @@ adatas = {}
 for dataname in datanames:
     adatas[dataname] = anndata.read_h5ad('__HISEMBLE_DATA_ROOT__/0.01_h5ad/%s_processed.h5ad'%dataname)
 
-# 更新行索引名称，使其更精确
+# Use descriptive row-index labels.
 index_names = [
     "AMI", "ARI", "NMI", "HOM", "GraphcLISI", "batchASW", 
     "Graph_connectivity", "ilisi_graph", "overcorrection",
-    "Spectral_Time_s", "Spectral_Memory_MB" # 新名称
+    "Spectral_Time_s", "Spectral_Memory_MB" # Updated labels.
 ]
 
 all_results_dict = {}
@@ -207,7 +209,7 @@ for dataname in datanames:
     savedata =  f"__HISEMBLE_DATA_ROOT__/ADATA/"
     savemetric_folder = '__HISEMBLE_RESULTS_ROOT__/snapatac/'
     
-    # 确保目录存在
+    # Ensure the output directory exists.
     if not os.path.exists(savedata):
         os.makedirs(savedata)
     if not os.path.exists(umapsave):
@@ -215,7 +217,7 @@ for dataname in datanames:
     if not os.path.exists(savemetric_folder):
         os.makedirs(savemetric_folder)
     
-    # 调用修改后的函数
+    # Call the processing function.
     result_dict = Snapatac(
         inputdata=adatas[dataname],
         dataname=dataname,
@@ -228,7 +230,7 @@ for dataname in datanames:
 
 
 if not all_results_dict:
-    print("\n所有任务处理完毕，但没有成功的结果。")
+    print("\nAll tasks completed, but none produced a successful result.")
 else:
     index_names = [
         "AMI", "ARI", "NMI", "HOM", "GraphcLISI", "batchASW", 
@@ -239,24 +241,24 @@ else:
     
     final_metrics_file = os.path.join(savemetric_folder, 'final_metrics_summary.csv')
 
-    # 健壮的CSV保存逻辑
+    # Update the metrics CSV while preserving existing results.
     if os.path.exists(final_metrics_file):
-        print(f"正在更新已有的指标文件: {final_metrics_file}")
+        print(f"Updating the existing metrics file: {final_metrics_file}")
         try:
             existing_df = pd.read_csv(final_metrics_file, index_col=0)
-            # 使用 update 方法，它会用新数据覆盖旧数据中的同名列
+            # Update existing columns with the new values.
             existing_df.update(final_df)
-            # 添加 final_df 中有但 existing_df 中没有的新列
+            # Add columns present in final_df but absent from existing_df.
             for col in final_df.columns:
                 if col not in existing_df.columns:
                     existing_df[col] = final_df[col]
             final_df = existing_df
         except Exception as e:
-            print(f"读取旧指标文件失败: {e}。将覆盖文件。")
+            print(f"Could not read the existing metrics file: {e}. The file will be replaced.")
 
     final_df.to_csv(final_metrics_file)
 
-    print(f"\n\n{'='*25} 所有任务完成 {'='*25}")
-    print("最终结果汇总:")
+    print(f"\n\n{'='*25} All tasks completed {'='*25}")
+    print("Final results summary:")
     print(final_df)
-    print(f"\n所有指标已保存/更新至: {final_metrics_file}")
+    print(f"\nAll metrics have been saved or updated at: {final_metrics_file}")

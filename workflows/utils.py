@@ -133,7 +133,7 @@ def find_best_matrix(matrix, true_cell_types, low=0.1, high=5.0, tolerance=0.01,
             best_resolution = mid
             
     final_clusters = perform_leiden_clustering(matrix, resolution=best_resolution, seed=seed)
-    print(f"最终使用分辨率: {best_resolution:.4f}, 产生 {len(remove_duplicates(final_clusters))} 个簇。")
+    print(f"Final resolution: {best_resolution:.4f}; clusters: {len(remove_duplicates(final_clusters))}.")
     return final_clusters
 
 def perform_leiden_clustering(net, resolution, seed=42):
@@ -157,7 +157,7 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
             variance += 1e-12
         gamma = 1.0 / (embedding.shape[1] * variance)
 
-    print(f"开始分块构建K-NN图 (chunk_size={chunk_size}, metric={metric})...")
+    print(f"Building the k-NN graph in chunks (chunk_size={chunk_size}, metric={metric})...")
     for i in range(0, n_samples, chunk_size):
         start_idx = i
         end_idx = min(i + chunk_size, n_samples)
@@ -168,7 +168,7 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
             sim_chunk = cosine_similarity(chunk_embedding, embedding)
             sim_chunk = np.maximum(sim_chunk, 0)
 
-        np.random.seed(random_seed) # 确保argsort在平局时行为一致
+        np.random.seed(random_seed) # Use a fixed seed for reproducible tie handling in argsort.
         indices_chunk = np.argsort(-sim_chunk, axis=1)[:, 1:k_neighbors + 1]
         data_chunk = np.take_along_axis(sim_chunk, indices_chunk, axis=1)
         rows_chunk = np.repeat(np.arange(start_idx, end_idx), k_neighbors)
@@ -182,7 +182,7 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
     final_data = np.concatenate(all_data)
     W_sparse = csr_matrix((final_data, (final_rows, final_cols)), shape=(n_samples, n_samples))
     W_symmetric = (W_sparse + W_sparse.T) / 2
-    print("分块构建完成！")
+    print("Chunked graph construction completed.")
     return W_symmetric
 
 def normalize_sparse(W_sparse: csr_matrix):
@@ -199,7 +199,7 @@ def normalize_sparse(W_sparse: csr_matrix):
 def sparsify_matrix(sparse_matrix: csr_matrix, k_neighbors: int, random_seed=42):
     n_samples = sparse_matrix.shape[0]
     all_rows, all_cols, all_data = [], [], []
-    np.random.seed(random_seed) # 确保argpartition行为一致
+    np.random.seed(random_seed) # Use a fixed seed for reproducible argpartition behavior.
     for i in range(n_samples):
         row_slice = sparse_matrix.getrow(i)
         if row_slice.nnz > k_neighbors:

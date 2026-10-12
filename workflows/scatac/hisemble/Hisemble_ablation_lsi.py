@@ -19,7 +19,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import warnings
 warnings.filterwarnings("ignore")
 import tensorflow as tf
-from utils import cluster_evaluation, overcorrection_score #从utils里面导入
+from utils import cluster_evaluation, overcorrection_score # Import shared utilities.
 from sklearn.metrics.pairwise import rbf_kernel, euclidean_distances
 from sklearn.metrics import adjusted_rand_score,adjusted_mutual_info_score,normalized_mutual_info_score, homogeneity_score
 from scipy.spatial.distance import pdist, squareform
@@ -57,7 +57,7 @@ class MemoryMonitor:
         self.running = False
         self.monitor_thread.join()
         self.peak_mb = self.peak_memory / (1024 ** 2)
-        print(f"主算法峰值内存使用: {self.peak_mb:.2f} MB")
+        print(f"Hisemble peak memory usage: {self.peak_mb:.2f} MB")
 
 def find_best_matrix(matrix, true_cell_types, low=0.1, high=5.0, tolerance=0.01, seed=42):
     best_resolution = None
@@ -85,7 +85,7 @@ def find_best_matrix(matrix, true_cell_types, low=0.1, high=5.0, tolerance=0.01,
             best_resolution = mid
             
     final_clusters = perform_leiden_clustering(matrix, resolution=best_resolution, seed=seed)
-    print(f"最终使用分辨率: {best_resolution:.4f}, 产生 {len(remove_duplicates(final_clusters))} 个簇。")
+    print(f"Final resolution: {best_resolution:.4f}; clusters: {len(remove_duplicates(final_clusters))}.")
     return final_clusters
 
 def perform_leiden_clustering(net, resolution, seed=42):
@@ -109,7 +109,7 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
             variance += 1e-12
         gamma = 1.0 / (embedding.shape[1] * variance)
 
-    print(f"开始分块构建K-NN图 (chunk_size={chunk_size}, metric={metric})...")
+    print(f"Building the k-NN graph in chunks (chunk_size={chunk_size}, metric={metric})...")
     for i in range(0, n_samples, chunk_size):
         start_idx = i
         end_idx = min(i + chunk_size, n_samples)
@@ -120,7 +120,7 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
             sim_chunk = cosine_similarity(chunk_embedding, embedding)
             sim_chunk = np.maximum(sim_chunk, 0)
 
-        np.random.seed(random_seed) # 确保argsort在平局时行为一致
+        np.random.seed(random_seed) # Use a fixed seed for reproducible tie handling in argsort.
         indices_chunk = np.argsort(-sim_chunk, axis=1)[:, 1:k_neighbors + 1]
         data_chunk = np.take_along_axis(sim_chunk, indices_chunk, axis=1)
         rows_chunk = np.repeat(np.arange(start_idx, end_idx), k_neighbors)
@@ -134,7 +134,7 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
     final_data = np.concatenate(all_data)
     W_sparse = csr_matrix((final_data, (final_rows, final_cols)), shape=(n_samples, n_samples))
     W_symmetric = (W_sparse + W_sparse.T) / 2
-    print("分块构建完成！")
+    print("Chunked graph construction completed.")
     return W_symmetric
 
 def normalize_sparse(W_sparse: csr_matrix) -> csr_matrix:
@@ -151,7 +151,7 @@ def normalize_sparse(W_sparse: csr_matrix) -> csr_matrix:
 def sparsify_matrix(sparse_matrix: csr_matrix, k_neighbors: int, random_seed=42) -> csr_matrix:
     n_samples = sparse_matrix.shape[0]
     all_rows, all_cols, all_data = [], [], []
-    np.random.seed(random_seed) # 确保argpartition行为一致
+    np.random.seed(random_seed) # Use a fixed seed for reproducible argpartition behavior.
     for i in range(n_samples):
         row_slice = sparse_matrix.getrow(i)
         if row_slice.nnz > k_neighbors:
@@ -172,13 +172,13 @@ def sparsify_matrix(sparse_matrix: csr_matrix, k_neighbors: int, random_seed=42)
     final_data = np.concatenate(all_data)
     return csr_matrix((final_data, (final_rows, final_cols)), shape=(n_samples, n_samples))
 
-def SNF(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
+def Hisemble(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed=42) -> csr_matrix:
     num_views = len(W_list)
     n_samples = W_list[0].shape[0]
     P_list = [normalize_sparse(W) for W in W_list]
     k_retained = k_neighbors * 2
     for iter_num in range(n_iterations):
-        print(f"  - 第 {iter_num + 1}/{n_iterations} 次迭代...")
+        print(f"  - Iteration {iter_num + 1}/{n_iterations}...")
         P_updated_list = []
         for i in range(num_views):
             sum_P_others = csr_matrix((n_samples, n_samples), dtype=np.float32)
@@ -199,61 +199,61 @@ def SNF(W_list: list, k_neighbors: int = 15, n_iterations: int = 20, random_seed
     final_affinity = (final_P + final_P.T) / 2
     return final_affinity
 
-# --- 主执行逻辑 (最终优化版) ---
+# Main execution block.
 def main():
-    # --- 1. 参数解析与配置 ---
+    # 1. Parse arguments and configure the workflow.
     parser = argparse.ArgumentParser(
-        description="为单细胞数据集运行SNF算法。默认处理代码中定义的完整列表，也可通过命令行指定部分数据集。",
-        formatter_class=argparse.RawTextHelpFormatter # 美化帮助信息格式
+        description="Run Hisemble on single-cell datasets. Process the predefined dataset list by default, or select datasets on the command line.",
+        formatter_class=argparse.RawTextHelpFormatter # Format command-line help.
     )
     parser.add_argument(
-        '--datanames',  #<-- 修改点1：参数名改为复数，更清晰
+        '--datanames',  # Use the plural argument name for multiple datasets.
         type=str, 
-        nargs='+',      #<-- 修改点2：nargs='+' 允许接收一个或多个值
-        required=False, #<-- 修改点3：不再是必填项
-        help="要处理的一个或多个数据集的名称（用空格隔开）。\n如果未提供此参数，将默认处理代码中定义的完整列表。"
+        nargs='+',      # nargs='+' accepts one or more values.
+        required=False, # The argument is optional.
+        help="One or more space-separated dataset identifiers.\nIf omitted, process the complete predefined dataset list."
     )
     args = parser.parse_args()
     
-    # 固定超参数和随机种子
+    # Fixed hyperparameters and random seed.
     K_NEIGHBORS = 15
     N_ITERATIONS = 20
     RANDOM_SEED = 42
     
-    # 设置全局随机种子
+    # Set the global random seed.
     np.random.seed(RANDOM_SEED)
     tf.random.set_seed(RANDOM_SEED)
     os.environ['PYTHONHASHSEED'] = str(RANDOM_SEED)
 
-    # --- 2. 确定要处理的数据集列表 ---
-    # 预定义的完整数据集列表
+    # 2. Select datasets to process.
+    # Complete predefined dataset list.
     all_datanames_predefined = [
     "Chen-2019-ATAC", "FCA_fetal_33184180_cerebrum", "FCA_fetal_33184180_cerebellum", "FCA_fetal_33184180_intestine", "FCA_fetal_33184180_kidney", "FCA_fetal_33184180_lung", "FCA_fetal_33184180_muscle", "FCA_fetal_33184180_pancreas", "FCA_fetal_33184180_stomach", "mca_BoneMarrow_62216", "mca_Cerebellum_62216", "mca_HeartA_62816", "mca_Kidney_62016", "mca_LargeIntestineA_62816", "mca_LargeIntestineB_62816", "mca_Liver_62016", "mca_Lung1_62216", "mca_Lung2_62216", "mca_SmallIntestine_62816", "mca_Testes_62016", "mca_WholeBrainA_62216", "mca_WholeBrainA_62816", "mouse_brain", "TME-All"
     ]
 
-    # 决定最终要运行的列表
+    # Select the datasets to process.
     if args.datanames:
-        # 如果用户从命令行提供了名称，则使用用户提供的列表
+        # Use dataset identifiers supplied on the command line.
         datanames_to_process = args.datanames
-        print(f"检测到命令行输入，将只处理以下 {len(datanames_to_process)} 个数据集:")
+        print(f"Processing the {len(datanames_to_process)} datasets selected on the command line:")
         print(datanames_to_process)
     else:
-        # 否则，使用代码中预定义的完整列表
+        # Otherwise, use the complete predefined dataset list.
         datanames_to_process = all_datanames_predefined
-        print(f"未指定数据集，将处理代码中预定义的 {len(datanames_to_process)} 个数据集。")
+        print(f"No datasets specified; processing all {len(datanames_to_process)} predefined datasets.")
 
-    # --- 3. 路径管理 ---
+    # 3. Manage paths.
     base_output_dir = '__HISEMBLE_RESULTS_ROOT__/Hisemble_abla_lsi/'
     os.makedirs(base_output_dir, exist_ok=True)
     save_path = os.path.join(base_output_dir, f'abla_lsi_results.csv')
 
-    # --- 4. 循环处理选定的数据集 ---
+    # 4. Process the selected datasets.
     for dataname in datanames_to_process:
-        print(f"\n{'='*20} 开始处理数据集: {dataname} {'='*20}")
-        print(f"固定参数: K={K_NEIGHBORS}, N_iterations={N_ITERATIONS}, Seed={RANDOM_SEED}")
+        print(f"\n{'='*20} Processing dataset: {dataname} {'='*20}")
+        print(f"Fixed parameters: K={K_NEIGHBORS}, iterations={N_ITERATIONS}, seed={RANDOM_SEED}")
 
         try:
-            # --- 数据加载 ---
+            # Load input data.
             with open(f'__HISEMBLE_DATA_ROOT__/ADATA/{dataname}_scBasset.pkl', 'rb') as f:
                 ad_scBasset = pickle.load(f)
             with open(f'__HISEMBLE_DATA_ROOT__/ADATA/{dataname}_snap.pkl', 'rb') as f:
@@ -262,26 +262,26 @@ def main():
             true_labels = ad_snap.obs.cell_type.to_numpy()
             true_cell_types = ad_snap.obs['cell_type'].nunique()
             
-            # --- 核心计算流程 (此处代码与上一版完全相同) ---
-            # a) 构建初始图
-            print("\n--- 构建初始稀疏亲和度矩阵 ---")
+            # Core numerical workflow.
+            # a. Construct the initial graphs.
+            print("\n--- Constructing initial sparse affinity matrices ---")
             W1 = build_knn_graph_chunked_cpu(ad_scBasset.obsm['projection'], k_neighbors=K_NEIGHBORS, metric='gaussian', random_seed=RANDOM_SEED)
             W2 = build_knn_graph_chunked_cpu(ad_snap.obsm['X_spectral'], k_neighbors=K_NEIGHBORS, metric='gaussian', random_seed=RANDOM_SEED)
             W_list = [W1, W2]
             del W1, W2
 
-            # b) 运行SNF并监控资源
+            # b. Run Hisemble and monitor resources.
             with MemoryMonitor() as monitor:
                 start_time = time.time()
-                fused_network = SNF(W_list=W_list, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
+                fused_network = Hisemble(W_list=W_list, k_neighbors=K_NEIGHBORS, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
                 end_time = time.time()
-            snf_runtime_s = end_time - start_time
-            snf_peak_mem_mb = monitor.peak_mb
+            hisemble_runtime_s = end_time - start_time
+            hisemble_peak_mem_mb = monitor.peak_mb
             del W_list
             
-            # c) 聚类和评估
-            print("\n--- 后续聚类与评估 ---")
-            # ... (此处省略了聚类和评估的详细代码，与上一版相同) ...
+            # c. Clustering and evaluation.
+            print("\n--- Downstream clustering and evaluation ---")
+            # Clustering and evaluation follow the main workflow.
             sources, targets = fused_network.nonzero()
             weights = fused_network[sources, targets].A1
             net = ig.Graph(list(zip(sources, targets)), directed=False)
@@ -296,7 +296,7 @@ def main():
             NMI = normalized_mutual_info_score(true_labels, clusters)
             HOM = homogeneity_score(true_labels, clusters)
             
-            # --- 结果汇总 ---
+            # Collect results.
             result_data = {
                 'dataname': [dataname],
                 'k_neighbors': [K_NEIGHBORS],
@@ -305,14 +305,14 @@ def main():
                 'AMI': [AMI],
                 'NMI': [NMI],
                 'HOM': [HOM],
-                'SNF_Time_s': [snf_runtime_s],
-                'SNF_Peak_Mem_MB': [snf_peak_mem_mb]
+                'Hisemble_Time_s': [hisemble_runtime_s],
+                'Hisemble_Peak_Mem_MB': [hisemble_peak_mem_mb]
             }
             result_df = pd.DataFrame(result_data)
             
-            # --- 健壮的CSV保存逻辑 (此处代码与上一版完全相同) ---
+            # Update the results CSV while preserving existing datasets.
             if os.path.exists(save_path):
-                # ... (此处省略了智能更新CSV的详细代码，与上一版相同) ...
+                # Update existing CSV records using the main workflow.
                 existing_df = pd.read_csv(save_path).set_index('dataname')
                 new_row_df = result_df.set_index('dataname')
                 existing_df.update(new_row_df)
@@ -324,15 +324,15 @@ def main():
 
             final_df.to_csv(save_path, index=False)
 
-            print(f"\n{'='*20} 数据集 {dataname} 处理完成 {'='*20}")
-            print("本次运行结果:")
+            print(f"\n{'='*20} Dataset {dataname} completed {'='*20}")
+            print("Results from this run:")
             print(result_df)
-            print(f"\n所有结果已更新至: {save_path}")
+            print(f"\nAll results updated at: {save_path}")
 
         except FileNotFoundError as e:
-            print(f"!!!!!! 数据加载失败: {e}。请检查文件路径。!!!!!!")
+            print(f"Data loading failed: {e}. Check the input paths.")
         except Exception as e:
-            print(f"!!!!!! 处理数据集 {dataname} 时发生严重错误: {e} !!!!!!")
+            print(f"Error while processing dataset {dataname}: {e}")
             continue
 
 if __name__ == '__main__':

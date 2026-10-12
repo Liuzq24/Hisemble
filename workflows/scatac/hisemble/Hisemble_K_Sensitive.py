@@ -20,7 +20,7 @@ from scipy.sparse import csr_matrix
 import argparse
 import os
 
-# --- 核心辅助函数 (保持原逻辑不变) ---
+# Core helper functions.
 
 def find_best_matrix(matrix, true_cell_types, low=0.1, high=5.0, tolerance=0.01, seed=42):
     best_resolution = None
@@ -70,8 +70,8 @@ def build_knn_graph_chunked_cpu(embedding: np.ndarray, k_neighbors: int, metric:
             variance += 1e-12
         gamma = 1.0 / (embedding.shape[1] * variance)
 
-    # 简化输出，避免刷屏
-    # print(f"构建K-NN图 (k={k_neighbors}, metric={metric})...")
+    # Limit progress logging.
+    # Optional progress message: building the k-NN graph.
     for i in range(0, n_samples, chunk_size):
         start_idx = i
         end_idx = min(i + chunk_size, n_samples)
@@ -139,7 +139,7 @@ def Hisemble(W_list: list, k_neighbors: int = 20, n_iterations: int = 20, random
     P_list = [normalize_sparse(W) for W in W_list]
     k_retained = k_neighbors * 2
     for iter_num in range(n_iterations):
-        # print(f"  - 第 {iter_num + 1}/{n_iterations} 次迭代...") # 减少日志输出
+        # Optional iteration progress logging.
         P_updated_list = []
         for i in range(num_views):
             sum_P_others = csr_matrix((n_samples, n_samples), dtype=np.float32)
@@ -160,44 +160,44 @@ def Hisemble(W_list: list, k_neighbors: int = 20, n_iterations: int = 20, random
     final_affinity = (final_P + final_P.T) / 2
     return final_affinity
 
-# --- 主执行逻辑 (灵敏度分析版) ---
+# Main neighborhood-sensitivity workflow.
 def main():
-    parser = argparse.ArgumentParser(description="K_NEIGHBORS 灵敏度分析脚本")
-    parser.add_argument('--datanames', type=str, nargs='+', required=False, help="要处理的数据集名称")
+    parser = argparse.ArgumentParser(description="Hisemble neighborhood-size sensitivity analysis.")
+    parser.add_argument('--datanames', type=str, nargs='+', required=False, help="Dataset identifiers to process.")
     args = parser.parse_args()
     
-    # --- 灵敏度分析设置 ---
+    # Sensitivity-analysis settings.
     k_values_to_test = [10, 15, 20, 25, 30, 40, 50]
     N_ITERATIONS = 20
     RANDOM_SEED = 42
     
-    # 全局种子
+    # Global random seed.
     np.random.seed(RANDOM_SEED)
     tf.random.set_seed(RANDOM_SEED)
     os.environ['PYTHONHASHSEED'] = str(RANDOM_SEED)
 
-    # 预定义列表
+    # Predefined dataset list.
     all_datanames_predefined = ['Chen-2019-ATAC']
     datanames_to_process = args.datanames if args.datanames else all_datanames_predefined
     
-    # 路径配置
-    base_output_dir = '__HISEMBLE_RESULTS_ROOT__/SNF_final/'
+    # Configure paths.
+    base_output_dir = '__HISEMBLE_RESULTS_ROOT__/Hisemble_final/'
     os.makedirs(base_output_dir, exist_ok=True)
-    # 修改保存文件名，避免覆盖，标明是灵敏度分析
-    save_path = os.path.join(base_output_dir, 'snf_sensitivity_k_neighbors.csv')
+    # Use a separate sensitivity-analysis filename to preserve benchmark results.
+    save_path = os.path.join(base_output_dir, 'hisemble_sensitivity_k_neighbors.csv')
 
-    print(f"即将开始灵敏度分析。")
-    print(f"遍历 K 值: {k_values_to_test}")
-    print(f"结果保存至: {save_path}")
+    print(f"Starting sensitivity analysis.")
+    print(f"Neighborhood sizes to evaluate: {k_values_to_test}")
+    print(f"Results will be saved to: {save_path}")
 
-    # 外层循环：数据集
+    # Outer loop: datasets.
     for dataname in datanames_to_process:
         print(f"\n{'#'*30}")
-        print(f"载入数据集: {dataname}")
+        print(f"Loading dataset: {dataname}")
         print(f"{'#'*30}")
 
         try:
-            # 1. 载入数据 (只在每个数据集开始时载入一次，节省IO时间)
+            # 1. Load each dataset once to avoid repeated I/O.
             with open(f'__HISEMBLE_DATA_ROOT__/ADATA/{dataname}_scBasset.pkl', 'rb') as f:
                 ad_scBasset = pickle.load(f)
             with open(f'__HISEMBLE_DATA_ROOT__/ADATA/{dataname}_snap.pkl', 'rb') as f:
@@ -208,38 +208,38 @@ def main():
             true_labels = ad_snap.obs.cell_type.to_numpy()
             true_cell_types = ad_snap.obs['cell_type'].nunique()
 
-            # 内层循环：遍历 K 值
+            # Inner loop: neighborhood sizes.
             for k in k_values_to_test:
                 print(f"\n--- Running with K_NEIGHBORS = {k} ---")
                 
-                # a) 构建图 (依赖于 K)
+                # a. Construct graphs for the current neighborhood size.
                 W1 = build_knn_graph_chunked_cpu(ad_scBasset.obsm['projection'], k_neighbors=k, metric='gaussian', random_seed=RANDOM_SEED)
                 W2 = build_knn_graph_chunked_cpu(ad_snap.obsm['X_spectral'], k_neighbors=k, metric='gaussian', random_seed=RANDOM_SEED)
                 W3 = build_knn_graph_chunked_cpu(ad_lsi.obsm['X_lsi'], k_neighbors=k, metric='cosine', random_seed=RANDOM_SEED)
                 W_list = [W1, W2, W3]
                 del W1, W2, W3
 
-                # b) 运行算法 (依赖于 K)
+                # b. Run Hisemble with the current neighborhood size.
                 fused_network = Hisemble(W_list=W_list, k_neighbors=k, n_iterations=N_ITERATIONS, random_seed=RANDOM_SEED)
                 del W_list
 
-                # c) 聚类与评估
+                # c. Clustering and evaluation.
                 sources, targets = fused_network.nonzero()
                 weights = fused_network[sources, targets].A1
                 net = ig.Graph(list(zip(sources, targets)), directed=False)
                 net.es['weight'] = weights
                 
-                # 寻找最佳分辨率进行聚类
+                # Search for the clustering resolution.
                 clusters = find_best_matrix(matrix=net, true_cell_types=true_cell_types, seed=RANDOM_SEED)
                 del net
                 
-                # 计算指标
+                # Calculate evaluation metrics.
                 ARI = adjusted_rand_score(true_labels, clusters)
                 NMI = normalized_mutual_info_score(true_labels, clusters)
                 
                 print(f"K={k} -> ARI: {ARI:.4f}, NMI: {NMI:.4f}")
 
-                # d) 实时保存结果
+                # d. Save each result immediately.
                 result_row = {
                     'dataname': dataname,
                     'k_neighbors': k,
@@ -250,17 +250,17 @@ def main():
                 new_df = pd.DataFrame([result_row])
                 
                 if os.path.exists(save_path):
-                    # 追加模式，不带header
+                    # Append rows without repeating the header.
                     new_df.to_csv(save_path, mode='a', header=False, index=False)
                 else:
-                    # 首次写入，带header
+                    # Write the header when creating the file.
                     new_df.to_csv(save_path, mode='w', header=True, index=False)
 
         except Exception as e:
-            print(f"!!!!!! 处理 {dataname} 时发生错误: {e} !!!!!!")
+            print(f"Error while processing {dataname}: {e}")
             continue
 
-    print(f"\n全部灵敏度分析完成。文件已保存: {save_path}")
+    print(f"\nSensitivity analysis completed. Results saved to: {save_path}")
 
 if __name__ == '__main__':
     main()

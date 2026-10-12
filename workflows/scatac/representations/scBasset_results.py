@@ -28,7 +28,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
     tf.random.set_seed(seed)
-    print(f"全局随机种子已设置为: {seed}")
+    print(f"Global random seed set to: {seed}")
 
 GLOBAL_SEED = 42
 set_seed(GLOBAL_SEED)
@@ -38,13 +38,13 @@ def find_best_leiden_resolution(adata, true_cell_types, low=0.1, high=5.0, toler
     low_n_clusters = sc.tl.leiden(adata, resolution=low, copy=True, random_state=random_seed).obs['leiden'].nunique()
     high_n_clusters = sc.tl.leiden(adata, resolution=high, copy=True, random_state=random_seed).obs['leiden'].nunique()
 
-    # 检查边界情况
+    # Check boundary cases.
     if high_n_clusters <= true_cell_types:
-        print(f"警告: resolution上限 {high} 产生的簇数 ({high_n_clusters}) 不大于目标簇数 ({true_cell_types})。直接使用 resolution={high}。")
+        print(f"Warning: the upper resolution {high} produces {high_n_clusters} clusters, no more than the target {true_cell_types}. Using resolution={high}.")
         sc.tl.leiden(adata, resolution=high, key_added=f'{key_prefix}_best', random_state=random_seed)
         return high
     if low_n_clusters >= true_cell_types:
-        print(f"警告: resolution下限 {low} 产生的簇数 ({low_n_clusters}) 不小于目标簇数 ({true_cell_types})。直接使用 resolution={low}。")
+        print(f"Warning: the lower resolution {low} produces {low_n_clusters} clusters, no fewer than the target {true_cell_types}. Using resolution={low}.")
         sc.tl.leiden(adata, resolution=low, key_added=f'{key_prefix}_best', random_state=random_seed)
         return low
 
@@ -56,7 +56,7 @@ def find_best_leiden_resolution(adata, true_cell_types, low=0.1, high=5.0, toler
         sc.tl.leiden(adata, resolution=mid, key_added=f'leiden_{mid:.4f}', random_state=random_seed)
         num_clusters = adata.obs[f'leiden_{mid:.4f}'].nunique()
 
-        # 记录与目标簇数最接近的分辨率
+        # Track the resolution with the closest cluster count to the target.
         if abs(num_clusters - true_cell_types) < abs(best_n_clust - true_cell_types):
             best_res = mid
             best_n_clust = num_clusters
@@ -66,22 +66,20 @@ def find_best_leiden_resolution(adata, true_cell_types, low=0.1, high=5.0, toler
         elif num_clusters > true_cell_types:
             high = mid
         else:
-            print(f"找到精确匹配！最佳分辨率: {mid:.4f}，簇数: {num_clusters}")
+            print(f"Exact match found. Best resolution: {mid:.4f}; clusters: {num_clusters}.")
             sc.tl.leiden(adata, resolution=mid, key_added=f'{key_prefix}_best', random_state=random_seed)
             return mid
 
-    print(f"搜索结束。最佳分辨率为 {best_res:.4f}，产生 {best_n_clust} 个簇 (目标为 {true_cell_types})。")
+    print(f"Search completed. Best resolution: {best_res:.4f}; clusters: {best_n_clust}; target: {true_cell_types}.")
     sc.tl.leiden(adata, resolution=best_res, key_added=f'{key_prefix}_best', random_state=random_seed)
     return best_res
 
 
 def process_single_dataset(dataname, base_path='__HISEMBLE_DATA_ROOT__/'):
-    """
-    处理单个数据集的完整分析流程。
-    """
-    print(f"\n{'='*20} 开始处理数据集: {dataname} {'='*20}")
+    """Run the complete analysis workflow for one dataset."""
+    print(f"\n{'='*20} Processing dataset: {dataname} {'='*20}")
 
-    # --- 1. 定义路径并创建目录 ---
+    # 1. Define paths and create directories.
     save_folder_umap = os.path.join(base_path, 'UMAP/')
     savedata_folder = os.path.join(base_path, 'ADATA/')
     savemetric_folder = os.path.join(base_path, 'metrics/scBasset/')
@@ -93,10 +91,10 @@ def process_single_dataset(dataname, base_path='__HISEMBLE_DATA_ROOT__/'):
     ad_file = os.path.join(base_path, f'0.01_processed/{dataname}_processed.h5ad')
     trained_model_file = os.path.join(base_path, f'scBasset_output/{dataname}/best_model.h5')
 
-    # --- 2. 加载数据和模型，生成嵌入 ---
-    print("加载数据和预训练模型...")
+    # 2. Load data and the model, then generate embeddings.
+    print("Loading data and the pretrained model...")
     if not os.path.exists(ad_file) or not os.path.exists(trained_model_file):
-        print(f"错误: 数据文件或模型文件不存在，跳过 {dataname}。")
+        print(f"Error: a data or model file is missing. Skipping {dataname}.")
         return None
 
     ad = anndata.read_h5ad(ad_file)
@@ -108,31 +106,31 @@ def process_single_dataset(dataname, base_path='__HISEMBLE_DATA_ROOT__/'):
     pd.DataFrame(proj).to_csv(proj_csv_path)
     ad.obsm['projection'] = proj
 
-    # --- 3. UMAP 可视化 ---
-    print("计算和绘制 UMAP 图...")
+    # 3. UMAP visualization.
+    print("Computing and plotting UMAP...")
     sc.pp.neighbors(ad, use_rep='projection', n_neighbors=15, random_state=GLOBAL_SEED)
     sc.tl.umap(ad, random_state=GLOBAL_SEED)
 
     sc.pl.umap(ad, color=['cell_type'], show=False, color_map='viridis')
     plt.savefig(os.path.join(save_folder_umap, f'umap_cell_type({dataname}_scBasset).pdf'), dpi=300, format="pdf", bbox_inches='tight', transparent=True)
-    plt.close() # 关闭图像，防止在循环中占用过多内存
+    plt.close() # Close the figure to release memory between datasets.
 
     if 'batch' in ad.obs.columns:
         sc.pl.umap(ad, color=['batch'], show=False, color_map='viridis')
         plt.savefig(os.path.join(save_folder_umap, f'umap_batch({dataname}_scBasset).pdf'), dpi=300, format='pdf', bbox_inches='tight', transparent=True)
         plt.close()
 
-    # --- 4. 聚类与评估 ---
-    print("进行Leiden聚类...")
+    # 4. Clustering and evaluation.
+    print("Running Leiden clustering...")
     true_cell_types = ad.obs['cell_type'].nunique()
     best_res = find_best_leiden_resolution(ad, true_cell_types, random_seed=GLOBAL_SEED) 
-    leiden_key = f'leiden_res_best' # find_best_leiden_resolution 会创建这个key
+    leiden_key = f'leiden_res_best' # find_best_leiden_resolution creates this key.
 
-    print("计算评估指标...")
-    # 注意：cluster_evaluation被调用了多次，效率较低。优化一下。
+    print("Computing evaluation metrics...")
+    # Calculate cluster_evaluation once to avoid repeated work.
     ami, ari, nmi, hom = cluster_evaluation(ad.obs, 'cell_type', leiden_key)
 
-    # 计算批次校正和整合指标
+    # Calculate batch-correction and integration metrics.
     if 'batch' in ad.obs.columns:
         graph_clisi = scib.me.clisi_graph(ad, label_key="batch", type_="embed", use_rep="projection")
         batch_asw = scib.me.silhouette_batch(ad, batch_key="batch", label_key="cell_type", embed="projection", verbose=False)
@@ -143,54 +141,54 @@ def process_single_dataset(dataname, base_path='__HISEMBLE_DATA_ROOT__/'):
 
     overcorrection = overcorrection_score(ad.obsm["projection"], ad.obs['cell_type'], n_neighbors=100, n_pools=100, n_samples_per_pool=100)
 
-    # --- 5. 保存结果 ---
-    print("保存结果...")
-    # 保存处理后的 anndata 对象
+    # 5. Save results.
+    print("Saving results...")
+    # Save the processed AnnData object.
     pkl_file_name = os.path.join(savedata_folder, f"{dataname}_scBasset.pkl")
     with open(pkl_file_name, "wb") as f:
         pickle.dump(ad, f)
 
-    # 汇总指标
+    # Collect evaluation metrics.
     metrics_dict = {
         f"{dataname}_scBasset": [ami, ari, nmi, hom, graph_clisi, batch_asw, graph_connectivity, ilisi_graph, overcorrection]
     }
     metrics_df = pd.DataFrame(metrics_dict, index=["AMI", "ARI", "NMI", "HOM", 'GraphcLISI', 'batchASW', 'Graph_connectivity', 'ilisi_graph', 'overcorrection'])
 
-    # 保存指标到CSV文件
-    # 采用更健壮的保存方式：每次都覆盖或先读后写，而不是追加模式'a'
+    # Save metrics to CSV.
+    # Read and update existing results rather than appending duplicate rows.
     final_metrics_file = os.path.join(savemetric_folder, 'scBasset_metrics_summary.csv')
     if os.path.exists(final_metrics_file):
         all_metrics_df = pd.read_csv(final_metrics_file, index_col=0)
-        # 更新或添加当前数据集的结果
+        # Update or add results for the current dataset.
         all_metrics_df[f"{dataname}_scBasset"] = metrics_df[f"{dataname}_scBasset"]
     else:
         all_metrics_df = metrics_df
 
     all_metrics_df.to_csv(final_metrics_file)
 
-    print(f"--- 数据集 {dataname} 处理完成 ---")
+    print(f"--- Dataset {dataname} completed ---")
     return metrics_df
 
 
-# ================== 主程序入口 ==================
+# Main entry point.
 if __name__ == '__main__':
-    # 1. 定义你的数据集列表
+    # 1. Define the dataset list.
     dataname_list = [
         'mouse_brain'
 
     ]
 
-    # 2. 循环处理每个数据集
+    # 2. Process each dataset.
     all_results = {}
     for dataname in dataname_list:
         result_df = process_single_dataset(dataname)
         if result_df is not None:
             all_results.update(result_df.to_dict())
 
-    # 3. 汇总并打印最终结果
+    # 3. Collect and print the final results.
     if all_results:
         final_summary_df = pd.DataFrame(all_results)
-        print("\n\n{'='*25} 所有任务完成，最终结果汇总 {'='*25}")
+        print("\n\n{'='*25} All tasks completed; final results summary {'='*25}")
         print(final_summary_df)
     else:
-        print("\n所有任务处理完毕，没有成功的结果。")
+        print("\nAll tasks completed without successful results.")

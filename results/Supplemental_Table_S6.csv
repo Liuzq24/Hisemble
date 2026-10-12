@@ -1,441 +1,81 @@
-record_type,dataset,dataset_label,n_cells,seed,resolution,n_clusters,ARI,NMI,seed_1,seed_2,partition_ARI
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,0,0.8656250000000001,21,0.48512870335610664,0.5786168535800706,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,1,0.8656250000000001,21,0.47415640821638017,0.5788045756887396,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,2,0.8656250000000001,22,0.5054421275124658,0.5781113301741828,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,3,0.731640625,22,0.5370498033488365,0.5943778076966264,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,4,0.8751953125,22,0.4954714920570114,0.5825541557083201,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,42,0.8656250000000001,21,0.47966701071981827,0.5790489802751401,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,101,1.01875,23,0.4704711401526394,0.574070652861756,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,202,0.9039062500000001,22,0.48115708674108343,0.580785982575058,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,314,0.8656250000000001,22,0.48143644303363,0.5770222422024041,,,
-per_seed,Chen-2019-ATAC,Mouse Cortex,9190,777,0.8656250000000001,21,0.4740930678934178,0.5798593416035879,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,0,0.1765625,4,0.3269256719110653,0.49129354299796374,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,1,0.1765625,4,0.32676521079212895,0.4908762802137831,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,2,0.1765625,4,0.3269256719110653,0.49129354299796374,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,3,0.1765625,4,0.3269256719110653,0.49129354299796374,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,4,0.1765625,4,0.3269256719110653,0.49129354299796374,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,42,0.21484375,4,0.34674728096704904,0.49869330233266407,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,101,0.1765625,4,0.3282183915641731,0.4896520610692646,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,202,0.1765625,4,0.3269256719110653,0.49129354299796374,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,314,0.1765625,4,0.3269256719110653,0.49129354299796374,,,
-per_seed,FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,777,0.1765625,4,0.32676521079212895,0.4908762802137831,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,0,0.7890625,20,0.5713391568631363,0.6887945188748211,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,1,0.7794921875,19,0.5524717553241814,0.6861471274034538,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,2,0.7890625,20,0.5667230416125599,0.6873234599012751,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,3,0.75078125,19,0.628081350108473,0.705147936881797,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,4,0.7794921875,20,0.570910257638252,0.6880848763936299,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,42,0.7890625,19,0.5590358501043754,0.686194870232742,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,101,0.769921875,20,0.5687548739666733,0.6886982263766103,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,202,0.75078125,20,0.5641088945412182,0.6941258359384507,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,314,0.7890625,19,0.5677527757735951,0.6884692115537163,,,
-per_seed,mca_Cerebellum_62216,MCA Cerebellum,2278,777,0.7986328125,20,0.5299602816999084,0.6763945085639929,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,0,0.1765625,7,0.5912524108658792,0.6072268282968518,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,1,0.1765625,7,0.5873451659298494,0.5993976590164968,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,2,0.1765625,7,0.5871162865185265,0.5988828244164103,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,3,0.1765625,7,0.5871162865185265,0.5988828244164103,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,4,0.1765625,7,0.6261305329880752,0.6168686808707202,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,42,0.1765625,7,0.5871288029386078,0.5984655606536499,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,101,0.1765625,7,0.5871162865185265,0.5988828244164103,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,202,0.1765625,7,0.5870798517321356,0.5980744675389009,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,314,0.1765625,7,0.5871162865185265,0.5988828244164103,,,
-per_seed,FCA_fetal_33184180_pancreas,FCA Pancreas,4994,777,0.1765625,7,0.5870920179471891,0.5976571553193034,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,0,1.1623046875,22,0.21228454549120318,0.5476676623021969,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,1,1.171875,22,0.2124933557293038,0.5483435987812159,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,2,1.2484375,23,0.20324529907703476,0.5455571285743752,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,3,1.325,23,0.20549166747221126,0.5444297440826661,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,4,1.28671875,22,0.19230001983723355,0.5360691128204261,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,42,1.21015625,22,0.20388292162508898,0.5438665814279713,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,101,1.171875,22,0.2306780698175242,0.5585280031437027,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,202,1.3154296875,22,0.18674172386972493,0.5351057926729038,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,314,1.171875,22,0.2097665338635144,0.5455439885557911,,,
-per_seed,mca_HeartA_62816,MCA Heart,7650,777,1.1431640625,22,0.20981724783296485,0.5490318626773447,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,0,1.05703125,22,0.527453715753322,0.7525011570798654,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,1,1.171875,22,0.5201947295009515,0.7479715618069693,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,2,1.0953125,22,0.5161504541583758,0.7419423855754342,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,3,1.0953125,22,0.5264669688442009,0.7520050891364894,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,4,1.0953125,22,0.5311185047081759,0.7531082176573849,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,42,1.0953125,22,0.5302473588195844,0.7522448573287046,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,101,1.0953125,22,0.5203703179134012,0.7478449531222223,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,202,1.171875,23,0.5245746665454808,0.7424627921309328,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,314,1.0953125,22,0.527760410865565,0.7505848461200778,,,
-per_seed,mca_Lung1_62216,MCA Lung A,5122,777,1.0378906250000002,22,0.528201315027996,0.7530121738496657,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,0,0.425390625,13,0.5581234869972651,0.7399823035744619,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,1,0.44453125,13,0.5514678599014968,0.7391930847149518,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,2,0.40625,13,0.5582705915195402,0.7400617561970073,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,3,0.40625,13,0.5562936038077597,0.7362179707911122,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,4,0.40625,13,0.5585890814986855,0.7414769194909274,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,42,0.425390625,13,0.5560457054854901,0.739816494727535,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,101,0.40625,13,0.5552462611958112,0.7393743977424311,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,202,0.40625,13,0.5506719731969802,0.7397825463523732,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,314,0.40625,13,0.5581799898166401,0.7390166383318919,,,
-per_seed,FCA_fetal_33184180_intestine,FCA Intestine,42942,777,0.40625,12,0.5505093866528384,0.7292243471139782,,,
-per_seed,TME-All,Human Tumor,37818,0,0.27226562499999996,20,0.6965942729591496,0.8072321221362265,,,
-per_seed,TME-All,Human Tumor,37818,1,0.253125,20,0.7574519444302881,0.8395106394205324,,,
-per_seed,TME-All,Human Tumor,37818,2,0.29140625,20,0.7207975650746593,0.8186388383100301,,,
-per_seed,TME-All,Human Tumor,37818,3,0.27226562499999996,20,0.716247795255554,0.8167605828153828,,,
-per_seed,TME-All,Human Tumor,37818,4,0.29140625,20,0.7255998173630612,0.8195141937951491,,,
-per_seed,TME-All,Human Tumor,37818,42,0.27226562499999996,20,0.6970491270621186,0.8073895594353743,,,
-per_seed,TME-All,Human Tumor,37818,101,0.253125,20,0.7564144635004203,0.8308211599630488,,,
-per_seed,TME-All,Human Tumor,37818,202,0.253125,20,0.7704316975084092,0.8425269979871768,,,
-per_seed,TME-All,Human Tumor,37818,314,0.253125,20,0.6737585388949723,0.8011054081492648,,,
-per_seed,TME-All,Human Tumor,37818,777,0.3296875,20,0.6939453581742286,0.8039823261020508,,,
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,1,0.9377992297126551
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,2,0.925328135114243
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,3,0.84057621950122
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,4,0.9314008524014888
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,42,0.962050236353618
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,101,0.9321870065910912
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,202,0.9571485143679501
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,314,0.9594458151263716
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,0,777,0.9318852434731072
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,2,0.9005220923089979
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,3,0.8338805063707933
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,4,0.9252342326906532
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,42,0.9562758785490079
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,101,0.9381445696023969
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,202,0.9609161794753346
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,314,0.9411095195891656
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,1,777,0.9834125225536677
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,2,3,0.8808603087074722
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,2,4,0.9466833923991688
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,2,42,0.9061094286388816
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,2,101,0.88899161612049
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,2,202,0.9096824280582363
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,2,314,0.9106124224833233
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,2,777,0.8902784634574289
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,3,4,0.8675129219084626
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,3,42,0.8390443165692714
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,3,101,0.8077982257551287
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,3,202,0.8397486461876073
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,3,314,0.8586404827021233
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,3,777,0.8300029752215465
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,4,42,0.9448783610906166
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,4,101,0.9015535556350228
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,4,202,0.9417884459599358
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,4,314,0.931803704762553
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,4,777,0.9191523448154552
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,42,101,0.9347794821786395
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,42,202,0.9801114117819386
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,42,314,0.9592014500301352
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,42,777,0.9624757489361943
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,101,202,0.9435567088199774
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,101,314,0.9200306569541995
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,101,777,0.9441075150679101
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,202,314,0.969816090304656
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,202,777,0.9642180502244265
-pairwise_partition,Chen-2019-ATAC,Mouse Cortex,,,,,,,314,777,0.9402888151230722
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,1,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,2,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,3,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,4,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,42,0.9536061891897083
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,101,0.9935964543209431
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,202,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,314,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,0,777,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,2,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,3,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,4,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,42,0.9545660935355184
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,101,0.9926350239823066
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,202,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,314,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,1,777,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,2,3,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,2,4,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,2,42,0.9536061891897083
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,2,101,0.9935964543209431
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,2,202,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,2,314,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,2,777,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,3,4,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,3,42,0.9536061891897083
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,3,101,0.9935964543209431
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,3,202,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,3,314,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,3,777,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,4,42,0.9536061891897083
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,4,101,0.9935964543209431
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,4,202,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,4,314,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,4,777,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,42,101,0.958097997555388
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,42,202,0.9536061891897083
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,42,314,0.9536061891897083
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,42,777,0.9545660935355184
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,101,202,0.9935964543209431
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,101,314,0.9935964543209431
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,101,777,0.9926350239823066
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,202,314,1.0
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,202,777,0.99903521891865
-pairwise_partition,FCA_fetal_33184180_cerebellum,FCA Cerebellum,,,,,,,314,777,0.99903521891865
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,1,0.8826157686510426
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,2,0.9882666298028615
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,3,0.8939096335356954
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,4,0.9761678055398896
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,42,0.959743785988848
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,101,0.9334633964684663
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,202,0.6844341882724366
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,314,0.9703377609170548
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,0,777,0.8830063360637449
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,2,0.8788487568569339
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,3,0.8668669910876519
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,4,0.8898748862001942
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,42,0.9022702260415028
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,101,0.9028548248148646
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,202,0.6612266012384456
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,314,0.8937329423224024
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,1,777,0.9419791937334989
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,2,3,0.890959059580828
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,2,4,0.9793190026941283
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,2,42,0.9515629015406465
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,2,101,0.9233487752926208
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,2,202,0.6828154741696795
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,2,314,0.9764858434808525
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,2,777,0.8811976187340017
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,3,4,0.8964107214284044
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,3,42,0.9014785693529589
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,3,101,0.8713202239283099
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,3,202,0.7339386750959734
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,3,314,0.8979478443374419
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,3,777,0.8306028202264066
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,4,42,0.9491405805105497
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,4,101,0.9216307800865362
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,4,202,0.6860887441310537
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,4,314,0.9786174552673748
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,4,777,0.8890441512089032
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,42,101,0.9470848847009604
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,42,202,0.6760169529586818
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,42,314,0.9472998157110023
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,42,777,0.9025364340532597
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,101,202,0.6712499940560359
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,101,314,0.9219423222016592
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,101,777,0.9040231515452712
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,202,314,0.6832892844497852
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,202,777,0.6297843734248777
-pairwise_partition,mca_Cerebellum_62216,MCA Cerebellum,,,,,,,314,777,0.8961901142691949
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,1,0.9935071330923021
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,2,0.9924801264092555
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,3,0.9924801264092555
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,4,0.9368572453071038
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,42,0.9931890715015007
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,101,0.9924801264092555
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,202,0.9925078988966592
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,314,0.9924801264092555
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,0,777,0.9932165936317172
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,2,0.9984575500363285
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,3,0.9984575500363285
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,4,0.9412160227711548
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,42,0.9977477068343734
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,101,0.9984575500363285
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,202,0.9980320949302015
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,314,0.9984575500363285
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,1,777,0.9973220432218651
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,2,3,1.0
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,2,4,0.9419701092386841
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,2,42,0.9992896700626825
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,2,101,1.0
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,2,202,0.9987893262605594
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,2,314,1.0
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,2,777,0.9980792034903385
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,3,4,0.9419701092386841
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,3,42,0.9992896700626825
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,3,101,1.0
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,3,202,0.9987893262605594
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,3,314,1.0
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,3,777,0.9980792034903385
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,4,42,0.9426443358350516
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,4,101,0.9419701092386841
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,4,202,0.9417281159963982
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,4,314,0.9419701092386841
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,4,777,0.9424020855949947
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,42,101,0.9992896700626825
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,42,202,0.9980796485958738
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,42,314,0.9992896700626825
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,42,777,0.9987896811015101
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,101,202,0.9987893262605594
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,101,314,1.0
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,101,777,0.9980792034903385
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,202,314,0.9987893262605594
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,202,777,0.9992897289422009
-pairwise_partition,FCA_fetal_33184180_pancreas,FCA Pancreas,,,,,,,314,777,0.9980792034903385
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,1,0.9305151585186361
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,2,0.9097282227437281
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,3,0.8992446782031963
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,4,0.7786347525154361
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,42,0.8940375129076289
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,101,0.8340720624264646
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,202,0.786652014661742
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,314,0.8794276611894049
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,0,777,0.771204962337595
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,2,0.8955267594402649
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,3,0.8581858805567456
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,4,0.7846871736270826
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,42,0.8488913912910748
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,101,0.8381973577208444
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,202,0.8112297991207943
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,314,0.847558409233749
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,1,777,0.7806049122085085
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,2,3,0.8650063735464655
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,2,4,0.8019382250888353
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,2,42,0.8597877308942424
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,2,101,0.7942834766947854
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,2,202,0.8312347025477692
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,2,314,0.8261606274125097
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,2,777,0.7741550690152531
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,3,4,0.7887261998424272
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,3,42,0.9236646812282111
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,3,101,0.8359522540635607
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,3,202,0.7830575201310906
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,3,314,0.9144096949471249
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,3,777,0.7741928378554741
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,4,42,0.7936434432964808
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,4,101,0.827542302273846
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,4,202,0.8397389866197265
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,4,314,0.80116084695344
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,4,777,0.8311580296690088
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,42,101,0.8224941335343597
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,42,202,0.7791167384795628
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,42,314,0.9123642908232948
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,42,777,0.7884322995585437
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,101,202,0.7857061988811803
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,101,314,0.8742339215877141
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,101,777,0.880192403806942
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,202,314,0.7704652799157671
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,202,777,0.7819980222135764
-pairwise_partition,mca_HeartA_62816,MCA Heart,,,,,,,314,777,0.8078621323356074
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,1,0.9789143145926894
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,2,0.9434268651930732
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,3,0.9956536726582165
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,4,0.9611745745755044
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,42,0.9619068247196472
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,101,0.9790630058613611
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,202,0.9094692724126284
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,314,0.9666326360101579
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,0,777,0.997452541280731
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,2,0.9366701541838728
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,3,0.9817403213388155
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,4,0.9531738909397588
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,42,0.9513262172182938
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,101,0.9860077913044399
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,202,0.9067553918221734
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,314,0.9563474779522488
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,1,777,0.9784444380822678
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,2,3,0.943811785538312
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,2,4,0.9536757345581294
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,2,42,0.9527603763070702
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,2,101,0.9448192077641866
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,2,202,0.9217334099802401
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,2,314,0.9672990603756975
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,2,777,0.9410924094703347
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,3,4,0.9654122497835789
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,3,42,0.9629199348841575
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,3,101,0.9826134577574335
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,3,202,0.9099386571363207
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,3,314,0.9679732235098759
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,3,777,0.9939554416330938
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,4,42,0.9853477440791737
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,4,101,0.9607396301553723
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,4,202,0.9173886701195736
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,4,314,0.9799436352633107
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,4,777,0.9616066526155483
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,42,101,0.9582447815997875
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,42,202,0.9119345224056813
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,42,314,0.9824418328589875
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,42,777,0.9623503940734982
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,101,202,0.9085195688982576
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,101,314,0.963828853642062
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,101,777,0.9775287879670493
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,202,314,0.9135574112007335
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,202,777,0.9113309948872667
-pairwise_partition,mca_Lung1_62216,MCA Lung A,,,,,,,314,777,0.9650998655473969
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,1,0.9553864497129434
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,2,0.9935871783294937
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,3,0.987936034841691
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,4,0.9933753020090326
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,42,0.9709973072835125
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,101,0.9812427839439658
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,202,0.9512825921995451
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,314,0.9927996187347692
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,0,777,0.97292916421634
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,2,0.9551680136613739
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,3,0.9485259775280271
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,4,0.9570201300126863
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,42,0.9680992358811914
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,101,0.9429880611875682
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,202,0.9870368204893872
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,314,0.9542334763381427
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,1,777,0.932608518788134
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,2,3,0.9891543619216475
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,2,4,0.9954198603433444
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,2,42,0.9696870409441783
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,2,101,0.9841251822234192
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,2,202,0.9524369024629377
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,2,314,0.9928272137596952
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,2,777,0.9721055449038801
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,3,4,0.9888060679105228
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,3,42,0.9637527501745824
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,3,101,0.9785879556967672
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,3,202,0.9456286909863587
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,3,314,0.9872375711062829
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,3,777,0.972928807036023
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,4,42,0.9695924013491964
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,4,101,0.9850008303352591
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,4,202,0.9548004441298895
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,4,314,0.995427928664812
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,4,777,0.9730163791182316
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,42,101,0.9573220343763333
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,42,202,0.9610711320255886
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,42,314,0.9672520879594071
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,42,777,0.9487618899153166
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,101,202,0.9413199788688988
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,101,314,0.982617540400551
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,101,777,0.9641442638988245
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,202,314,0.9538705252102118
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,202,777,0.9300257092873782
-pairwise_partition,FCA_fetal_33184180_intestine,FCA Intestine,,,,,,,314,777,0.9722937326978802
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,1,0.742015079333669
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,2,0.918016490365903
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,3,0.9098315107710149
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,4,0.9030835933952501
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,42,0.9809498353250429
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,101,0.7403849664346575
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,202,0.7423166461254933
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,314,0.9131265870349178
-pairwise_partition,TME-All,Human Tumor,,,,,,,0,777,0.9537769624930638
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,2,0.7662148184059534
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,3,0.7883063184233191
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,4,0.7695138995918029
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,42,0.7444574237670678
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,101,0.8517035346303773
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,202,0.9593348138226722
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,314,0.7375968997891503
-pairwise_partition,TME-All,Human Tumor,,,,,,,1,777,0.7564417299226278
-pairwise_partition,TME-All,Human Tumor,,,,,,,2,3,0.9326140829152544
-pairwise_partition,TME-All,Human Tumor,,,,,,,2,4,0.9056898001314816
-pairwise_partition,TME-All,Human Tumor,,,,,,,2,42,0.9191856315501704
-pairwise_partition,TME-All,Human Tumor,,,,,,,2,101,0.7616394083809561
-pairwise_partition,TME-All,Human Tumor,,,,,,,2,202,0.7594663331108028
-pairwise_partition,TME-All,Human Tumor,,,,,,,2,314,0.9009957183413355
-pairwise_partition,TME-All,Human Tumor,,,,,,,2,777,0.9185908881760187
-pairwise_partition,TME-All,Human Tumor,,,,,,,3,4,0.9207522292685436
-pairwise_partition,TME-All,Human Tumor,,,,,,,3,42,0.9151181754700918
-pairwise_partition,TME-All,Human Tumor,,,,,,,3,101,0.7659224053378889
-pairwise_partition,TME-All,Human Tumor,,,,,,,3,202,0.7774621792274435
-pairwise_partition,TME-All,Human Tumor,,,,,,,3,314,0.9249455371567351
-pairwise_partition,TME-All,Human Tumor,,,,,,,3,777,0.9260011128983368
-pairwise_partition,TME-All,Human Tumor,,,,,,,4,42,0.9041086221272038
-pairwise_partition,TME-All,Human Tumor,,,,,,,4,101,0.7540879263931857
-pairwise_partition,TME-All,Human Tumor,,,,,,,4,202,0.773656410592527
-pairwise_partition,TME-All,Human Tumor,,,,,,,4,314,0.8652373392463542
-pairwise_partition,TME-All,Human Tumor,,,,,,,4,777,0.8801869653189482
-pairwise_partition,TME-All,Human Tumor,,,,,,,42,101,0.7415873072486383
-pairwise_partition,TME-All,Human Tumor,,,,,,,42,202,0.7421414122816585
-pairwise_partition,TME-All,Human Tumor,,,,,,,42,314,0.9156423179172716
-pairwise_partition,TME-All,Human Tumor,,,,,,,42,777,0.9529533462874735
-pairwise_partition,TME-All,Human Tumor,,,,,,,101,202,0.858182547768235
-pairwise_partition,TME-All,Human Tumor,,,,,,,101,314,0.7211890132660903
-pairwise_partition,TME-All,Human Tumor,,,,,,,101,777,0.7447536258457544
-pairwise_partition,TME-All,Human Tumor,,,,,,,202,314,0.7326242310708954
-pairwise_partition,TME-All,Human Tumor,,,,,,,202,777,0.7564851343610649
-pairwise_partition,TME-All,Human Tumor,,,,,,,314,777,0.9252090253862195
+dataset,dataset_label,n_cells,seed,resolution,n_clusters,ARI,NMI
+Chen-2019-ATAC,Mouse Cortex,9190,0,0.8656250000000001,21,0.48512870335610664,0.5786168535800706
+Chen-2019-ATAC,Mouse Cortex,9190,1,0.8656250000000001,21,0.47415640821638017,0.5788045756887396
+Chen-2019-ATAC,Mouse Cortex,9190,2,0.8656250000000001,22,0.5054421275124658,0.5781113301741828
+Chen-2019-ATAC,Mouse Cortex,9190,3,0.731640625,22,0.5370498033488365,0.5943778076966264
+Chen-2019-ATAC,Mouse Cortex,9190,4,0.8751953125,22,0.4954714920570114,0.5825541557083201
+Chen-2019-ATAC,Mouse Cortex,9190,42,0.8656250000000001,21,0.47966701071981827,0.5790489802751401
+Chen-2019-ATAC,Mouse Cortex,9190,101,1.01875,23,0.4704711401526394,0.574070652861756
+Chen-2019-ATAC,Mouse Cortex,9190,202,0.9039062500000001,22,0.48115708674108343,0.580785982575058
+Chen-2019-ATAC,Mouse Cortex,9190,314,0.8656250000000001,22,0.48143644303363,0.5770222422024041
+Chen-2019-ATAC,Mouse Cortex,9190,777,0.8656250000000001,21,0.4740930678934178,0.5798593416035879
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,0,0.1765625,4,0.3269256719110653,0.49129354299796374
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,1,0.1765625,4,0.32676521079212895,0.4908762802137831
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,2,0.1765625,4,0.3269256719110653,0.49129354299796374
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,3,0.1765625,4,0.3269256719110653,0.49129354299796374
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,4,0.1765625,4,0.3269256719110653,0.49129354299796374
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,42,0.21484375,4,0.34674728096704904,0.49869330233266407
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,101,0.1765625,4,0.3282183915641731,0.4896520610692646
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,202,0.1765625,4,0.3269256719110653,0.49129354299796374
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,314,0.1765625,4,0.3269256719110653,0.49129354299796374
+FCA_fetal_33184180_cerebellum,FCA Cerebellum,3313,777,0.1765625,4,0.32676521079212895,0.4908762802137831
+mca_Cerebellum_62216,MCA Cerebellum,2278,0,0.7890625,20,0.5713391568631363,0.6887945188748211
+mca_Cerebellum_62216,MCA Cerebellum,2278,1,0.7794921875,19,0.5524717553241814,0.6861471274034538
+mca_Cerebellum_62216,MCA Cerebellum,2278,2,0.7890625,20,0.5667230416125599,0.6873234599012751
+mca_Cerebellum_62216,MCA Cerebellum,2278,3,0.75078125,19,0.628081350108473,0.705147936881797
+mca_Cerebellum_62216,MCA Cerebellum,2278,4,0.7794921875,20,0.570910257638252,0.6880848763936299
+mca_Cerebellum_62216,MCA Cerebellum,2278,42,0.7890625,19,0.5590358501043754,0.686194870232742
+mca_Cerebellum_62216,MCA Cerebellum,2278,101,0.769921875,20,0.5687548739666733,0.6886982263766103
+mca_Cerebellum_62216,MCA Cerebellum,2278,202,0.75078125,20,0.5641088945412182,0.6941258359384507
+mca_Cerebellum_62216,MCA Cerebellum,2278,314,0.7890625,19,0.5677527757735951,0.6884692115537163
+mca_Cerebellum_62216,MCA Cerebellum,2278,777,0.7986328125,20,0.5299602816999084,0.6763945085639929
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,0,0.1765625,7,0.5912524108658792,0.6072268282968518
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,1,0.1765625,7,0.5873451659298494,0.5993976590164968
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,2,0.1765625,7,0.5871162865185265,0.5988828244164103
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,3,0.1765625,7,0.5871162865185265,0.5988828244164103
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,4,0.1765625,7,0.6261305329880752,0.6168686808707202
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,42,0.1765625,7,0.5871288029386078,0.5984655606536499
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,101,0.1765625,7,0.5871162865185265,0.5988828244164103
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,202,0.1765625,7,0.5870798517321356,0.5980744675389009
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,314,0.1765625,7,0.5871162865185265,0.5988828244164103
+FCA_fetal_33184180_pancreas,FCA Pancreas,4994,777,0.1765625,7,0.5870920179471891,0.5976571553193034
+mca_HeartA_62816,MCA Heart,7650,0,1.1623046875,22,0.21228454549120318,0.5476676623021969
+mca_HeartA_62816,MCA Heart,7650,1,1.171875,22,0.2124933557293038,0.5483435987812159
+mca_HeartA_62816,MCA Heart,7650,2,1.2484375,23,0.20324529907703476,0.5455571285743752
+mca_HeartA_62816,MCA Heart,7650,3,1.325,23,0.20549166747221126,0.5444297440826661
+mca_HeartA_62816,MCA Heart,7650,4,1.28671875,22,0.19230001983723355,0.5360691128204261
+mca_HeartA_62816,MCA Heart,7650,42,1.21015625,22,0.20388292162508898,0.5438665814279713
+mca_HeartA_62816,MCA Heart,7650,101,1.171875,22,0.2306780698175242,0.5585280031437027
+mca_HeartA_62816,MCA Heart,7650,202,1.3154296875,22,0.18674172386972493,0.5351057926729038
+mca_HeartA_62816,MCA Heart,7650,314,1.171875,22,0.2097665338635144,0.5455439885557911
+mca_HeartA_62816,MCA Heart,7650,777,1.1431640625,22,0.20981724783296485,0.5490318626773447
+mca_Lung1_62216,MCA Lung A,5122,0,1.05703125,22,0.527453715753322,0.7525011570798654
+mca_Lung1_62216,MCA Lung A,5122,1,1.171875,22,0.5201947295009515,0.7479715618069693
+mca_Lung1_62216,MCA Lung A,5122,2,1.0953125,22,0.5161504541583758,0.7419423855754342
+mca_Lung1_62216,MCA Lung A,5122,3,1.0953125,22,0.5264669688442009,0.7520050891364894
+mca_Lung1_62216,MCA Lung A,5122,4,1.0953125,22,0.5311185047081759,0.7531082176573849
+mca_Lung1_62216,MCA Lung A,5122,42,1.0953125,22,0.5302473588195844,0.7522448573287046
+mca_Lung1_62216,MCA Lung A,5122,101,1.0953125,22,0.5203703179134012,0.7478449531222223
+mca_Lung1_62216,MCA Lung A,5122,202,1.171875,23,0.5245746665454808,0.7424627921309328
+mca_Lung1_62216,MCA Lung A,5122,314,1.0953125,22,0.527760410865565,0.7505848461200778
+mca_Lung1_62216,MCA Lung A,5122,777,1.0378906250000002,22,0.528201315027996,0.7530121738496657
+FCA_fetal_33184180_intestine,FCA Intestine,42942,0,0.425390625,13,0.5581234869972651,0.7399823035744619
+FCA_fetal_33184180_intestine,FCA Intestine,42942,1,0.44453125,13,0.5514678599014968,0.7391930847149518
+FCA_fetal_33184180_intestine,FCA Intestine,42942,2,0.40625,13,0.5582705915195402,0.7400617561970073
+FCA_fetal_33184180_intestine,FCA Intestine,42942,3,0.40625,13,0.5562936038077597,0.7362179707911122
+FCA_fetal_33184180_intestine,FCA Intestine,42942,4,0.40625,13,0.5585890814986855,0.7414769194909274
+FCA_fetal_33184180_intestine,FCA Intestine,42942,42,0.425390625,13,0.5560457054854901,0.739816494727535
+FCA_fetal_33184180_intestine,FCA Intestine,42942,101,0.40625,13,0.5552462611958112,0.7393743977424311
+FCA_fetal_33184180_intestine,FCA Intestine,42942,202,0.40625,13,0.5506719731969802,0.7397825463523732
+FCA_fetal_33184180_intestine,FCA Intestine,42942,314,0.40625,13,0.5581799898166401,0.7390166383318919
+FCA_fetal_33184180_intestine,FCA Intestine,42942,777,0.40625,12,0.5505093866528384,0.7292243471139782
+TME-All,Human Tumor,37818,0,0.27226562499999996,20,0.6965942729591496,0.8072321221362265
+TME-All,Human Tumor,37818,1,0.253125,20,0.7574519444302881,0.8395106394205324
+TME-All,Human Tumor,37818,2,0.29140625,20,0.7207975650746593,0.8186388383100301
+TME-All,Human Tumor,37818,3,0.27226562499999996,20,0.716247795255554,0.8167605828153828
+TME-All,Human Tumor,37818,4,0.29140625,20,0.7255998173630612,0.8195141937951491
+TME-All,Human Tumor,37818,42,0.27226562499999996,20,0.6970491270621186,0.8073895594353743
+TME-All,Human Tumor,37818,101,0.253125,20,0.7564144635004203,0.8308211599630488
+TME-All,Human Tumor,37818,202,0.253125,20,0.7704316975084092,0.8425269979871768
+TME-All,Human Tumor,37818,314,0.253125,20,0.6737585388949723,0.8011054081492648
+TME-All,Human Tumor,37818,777,0.3296875,20,0.6939453581742286,0.8039823261020508
