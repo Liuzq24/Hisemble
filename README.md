@@ -6,12 +6,7 @@ Provide two or more embeddings for the same cells in identical order. Their feat
 
 ## Installation
 
-Use Python 3.10. Clone the repository first:
-
-```bash
-git clone https://github.com/Liuzq24/Hisemble.git
-cd Hisemble
-```
+Use Python 3.10. Obtain the source through GitHub's **Code** menu and run the commands below from the repository root.
 
 ### pip
 

@@ -6,14 +6,7 @@ The commands below run from the root of this GitHub checkout.
 
 ## 1. Obtain the code
 
-Clone the repository and enter its root directory:
-
-```bash
-git clone https://github.com/Liuzq24/Hisemble.git
-cd Hisemble
-```
-
-Run the commands below from the repository root.
+Obtain the source through GitHub's **Code** menu, then open a terminal at the repository root. Run all commands below from that directory.
 
 ## 2. Start Docker and build
 
