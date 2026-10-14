@@ -17,7 +17,15 @@ COPY reproducibility/requirements-trajectory.txt /tmp/requirements-trajectory.tx
 RUN python -m pip install --no-cache-dir --upgrade pip \
     && python -m pip install --no-cache-dir -r /tmp/requirements-core.txt -r /tmp/requirements-trajectory.txt
 
-COPY . /opt/hisemble
+COPY hisemble/ /opt/hisemble/hisemble/
+COPY analyses/ /opt/hisemble/analyses/
+COPY tests/ /opt/hisemble/tests/
+COPY examples/ /opt/hisemble/examples/
+COPY workflows/ /opt/hisemble/workflows/
+COPY results/ /opt/hisemble/results/
+COPY reproducibility/ /opt/hisemble/reproducibility/
+COPY setup.py prepare_workflows.py config.example.json /opt/hisemble/
+COPY README.md Reproduction_Tutorial.md ANALYSIS_MAP.md INPUTS_AND_ENVIRONMENTS.md DEPENDENCY_IMPORTS.csv LICENSE /opt/hisemble/
 WORKDIR /work
 
 RUN python -c "import hisemble; print('Hisemble core environment OK')"
