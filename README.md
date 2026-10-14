@@ -1,45 +1,53 @@
 # Hisemble
 
-Training-free fusion of precomputed cell embeddings for scalable ensemble clustering of single-cell chromatin accessibility data.
+Hisemble fuses complementary, precomputed cell embeddings through training-free sparse cross-diffusion for scalable ensemble clustering of single-cell chromatin accessibility data.
 
-Start with [Reproduction_Tutorial.md](Reproduction_Tutorial.md) to build the pinned environment, run the tests and synthetic example, and reproduce the analyses from external inputs.
+Provide two or more embeddings for the same cells in identical order. Their feature dimensions may differ. Hisemble returns a consensus graph and cluster assignments in an AnnData object; no GPU is required.
 
-| Location | Contents |
-|---|---|
-| `hisemble/` | Fusion and AnnData API |
-| `tests/` and `examples/` | Tests and runnable examples |
-| `reproducibility/` | Docker, pip and Conda specifications; executable verification |
-| `analyses/` | Supplementary analysis scripts |
-| `results/` | Supplemental Tables S1--S10 and Fig. S10 cell-level pseudotime |
-| `workflows/` | Preprocessing, encoder, benchmark and downstream workflows grouped by data modality |
-| `ANALYSIS_MAP.md` | Analysis-to-script mapping |
-| `INPUTS_AND_ENVIRONMENTS.md` | Required data and environment boundaries |
-| `WORKFLOW_MANIFEST.csv` and `SHA256SUMS` | Script inventory and file checksums |
+## Installation
 
-The core accepts precomputed embeddings. Raw data and large embeddings are external inputs; upstream encoders require separate environments. Figures are supplied with the manuscript.
-
-To prepare workflows with your input paths, replace the paths in `config.example.json`, then run:
+Use Python 3.10. Clone the repository first:
 
 ```bash
-python prepare_workflows.py --config /absolute/path/config.json --output /absolute/path/new-workdir
+git clone https://github.com/Liuzq24/Hisemble.git
+cd Hisemble
 ```
 
-Project repository: https://github.com/Liuzq24/Hisemble
+### pip
 
-## Run a first example
-
-From this `Supplemental_Code` directory:
+Create a virtual environment and install Hisemble with the pinned dependencies:
 
 ```bash
-docker build -f reproducibility/Dockerfile -t hisemble:reproduce .
-mkdir -p example_output
-docker run --rm -v "$PWD/example_output:/output" hisemble:reproduce \
-  python /opt/hisemble/examples/quickstart_synthetic.py --output-dir /output
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r reproducibility/requirements-core.txt -r reproducibility/requirements-trajectory.txt
+python -m pip install --no-deps -e .
 ```
 
-The synthetic example uses 180 cells and needs no biological download or GPU.
+### Conda
 
-## Use the AnnData interface
+Alternatively, create the supplied Conda environment:
+
+```bash
+conda env create -f reproducibility/environment-core.yml
+conda activate hisemble-core
+python -m pip install -r reproducibility/requirements-trajectory.txt
+python -m pip install --no-deps -e .
+```
+
+## Quick start
+
+Run the synthetic example from the repository root:
+
+```bash
+python examples/quickstart_synthetic.py --output-dir example_output
+```
+
+This example uses 180 cells, requires no biological data download, and writes `example_output/synthetic_hisemble.h5ad` with the consensus graph and cluster labels.
+
+## Use your own AnnData object
+
+Store the embeddings in `adata.obsm` and replace the example keys below with their actual names:
 
 ```python
 from hisemble import run_hisemble
@@ -55,16 +63,12 @@ run_hisemble(
 )
 ```
 
-The consensus graph is stored in `.obsp['connectivities']`, distances in
-`.obsp['distances']`, labels in `.obs['hisemble_clusters']`, and graph metadata in
-`.uns['neighbors']`. Input views must describe the same cells in the same row
-order, contain finite values and exhibit non-degenerate variation.
+Use Gaussian affinity for continuous latent embeddings and cosine similarity for LSI profiles. Inputs must contain finite values and non-degenerate variation. The consensus graph is stored in `adata.obsp["connectivities"]`, distances in `adata.obsp["distances"]`, cluster labels in `adata.obs["hisemble_clusters"]`, and neighbor metadata in `adata.uns["neighbors"]`.
 
-For installation without Docker, use `reproducibility/environment-core.yml` and
-then `pip install -e .`. DPT analysis also uses
-`reproducibility/requirements-trajectory.txt`. See `INPUTS_AND_ENVIRONMENTS.md`
-for upstream encoder and data requirements.
+## Reproduce the paper analyses
 
-## Current convergence scripts (2026-10-11)
+[Reproduction_Tutorial.md](Reproduction_Tutorial.md) describes Docker setup, tests, analysis commands, and configuration of the benchmark workflows. External data and upstream encoder requirements are detailed in [INPUTS_AND_ENVIRONMENTS.md](INPUTS_AND_ENVIRONMENTS.md). See [ANALYSIS_MAP.md](ANALYSIS_MAP.md) for the correspondence between analyses, scripts, and reference results.
 
-The convergence workflow now uses fixed initial W, exactly as the primary analysis. Its original `Relative Change` and pre-update `Delta_Q` columns are retained. The audited full-dataset runner, 24-dataset launcher and original-metric exporter are in [analyses/convergence/](analyses/convergence/README.md). Use `--iterations 50` for the figure range.
+## License
+
+Hisemble is distributed under the [MIT license](LICENSE).

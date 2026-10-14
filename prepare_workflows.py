@@ -53,7 +53,7 @@ def main():
     print(f'Configured {len(pending)} files in {output}. No analysis was run.')
     print('Shared helper module:', output / 'utils.py')
     print('For workflow scripts, add this directory to PYTHONPATH:', output)
-    print('Inspect ANALYSIS_MAP.md and INPUTS_AND_ENVIRONMENTS.md in the archive root before selecting an entry point.')
+    print('Inspect ANALYSIS_MAP.md and INPUTS_AND_ENVIRONMENTS.md in the repository root before selecting an entry point.')
 
 if __name__ == '__main__':
     main()

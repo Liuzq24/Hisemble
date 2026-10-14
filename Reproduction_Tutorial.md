@@ -13,7 +13,7 @@ git clone https://github.com/Liuzq24/Hisemble.git
 cd Hisemble
 ```
 
-Use this checkout for the commands below. The corresponding journal archive is supplied as Supplemental Code.
+Run the commands below from the repository root.
 
 ## 2. Start Docker and build
 
@@ -24,7 +24,7 @@ docker version
 docker build -f reproducibility/Dockerfile -t hisemble:reproduce .
 ```
 
-The build uses the archived source and pinned core packages, plus the separate Scanpy/DPT dependency list. It accepts precomputed embeddings and does not train all upstream encoders. The first build downloads packages; subsequent builds can reuse the cache.
+The build uses the repository source and pinned core packages, plus the Scanpy/DPT dependency list. It accepts precomputed embeddings and does not train all upstream encoders. The first build downloads packages; subsequent builds can reuse the cache.
 
 ## 3. Run the checks
 
@@ -42,7 +42,7 @@ docker run --rm hisemble:reproduce \
   python /opt/hisemble/reproducibility/verify_installation.py
 ```
 
-Expected final line begins `PASS: all packaged tests`. These quick checks use synthetic inputs; they do not require downloaded biological data.
+Expected final line begins `PASS: all tests`. These quick checks use synthetic inputs; they do not require downloaded biological data.
 
 ## 4. Run Hisemble and save an AnnData result
 
@@ -86,7 +86,7 @@ NaN/Inf or invalid dimensions stop validation before graph construction. Finite 
 
 ## 6. Reproduce supplementary analyses
 
-These commands require external biological inputs. The ZIP excludes raw data and large precomputed embeddings; it includes compact numerical references. The synthetic example above establishes that the deployment works, but is not a reproduction of the biological benchmarks.
+These commands require external biological inputs. Raw data and large precomputed embeddings are external inputs; numerical reference results are included in `results/`. The synthetic example above establishes that the deployment works, but is not a reproduction of the biological benchmarks.
 
 Use this aligned AnnData-pickle layout:
 
@@ -158,7 +158,7 @@ The script computes DPT for the 1,943-cell MCA Bone Marrow B-cell lineage shown 
 
 The full-precision reference tables `Supplemental_Table_S1.csv`--`Supplemental_Table_S10.csv` are under `results/` and match the separately submitted CSV files. Cell-level pseudotime for Supplemental Fig. S10 is in `lineage_trajectory/mca_BoneMarrow_62216/pseudotime.csv`. MCA Lung A inputs contain 5,122 aligned cells. Generated resource fields named `peak_memory_mb` use MiB; divide by 1,024 to compare with the GiB values in the supplementary tables.
 
-The archive contains `ANALYSIS_MAP.md`, `INPUTS_AND_ENVIRONMENTS.md`, and configurable preprocessing, encoder and benchmark workflows under `workflows/`. These require separate upstream environments and external inputs. Their complete execution is not covered by the core Docker checks. Pure figure-layout and export programs are excluded.
+The repository contains `ANALYSIS_MAP.md`, `INPUTS_AND_ENVIRONMENTS.md`, and configurable preprocessing, encoder and benchmark workflows under `workflows/`. These require separate upstream environments and external inputs. Their complete execution is not covered by the core Docker checks. Pure figure-layout and export programs are excluded.
 
 ### Prepare modality-specific workflows
 
@@ -188,7 +188,3 @@ the Pancreas comparison keeps its own helper alongside its two scripts.
 - NaN/Inf or incompatible cells: correct or explicitly align the upstream inputs before fusion.
 - Memory pressure: begin with the synthetic example and one small biological dataset; reduce parallel workers. Large atlas and dense-ablation runs may exceed a MacBook's RAM.
 - Run all commands from one checkout; do not mix files from different versions.
-
-## Current convergence scripts (2026-10-11)
-
-The convergence workflow now uses fixed initial W, exactly as the primary analysis. Its original `Relative Change` and pre-update `Delta_Q` columns are retained. The audited full-dataset runner, 24-dataset launcher and original-metric exporter are in [analyses/convergence/](analyses/convergence/README.md). Use `--iterations 50` for the figure range.

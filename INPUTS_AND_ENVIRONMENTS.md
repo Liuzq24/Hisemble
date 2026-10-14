@@ -28,7 +28,7 @@ must match each dataset. Reference FASTA files are supplied under `GENOME_ROOT`.
 
 These scripts import additional packages such as Scanpy, seaborn, TensorFlow,
 SnapATAC2 and scBasset. Baseline dependencies are recorded in `DEPENDENCY_IMPORTS.csv`.
-Upstream encoder versions and hardware-specific environments are not pinned in this archive.
+Upstream encoder versions and hardware-specific environments are not pinned in this repository.
 Do not install every imported package into the tested core environment as one stack.
 
 ## scRNA
@@ -49,7 +49,7 @@ environment remains to be confirmed.
 `E15_5-S1_expr_preprocessed.h5ad`, and `E18_5-S1_expr_preprocessed.h5ad` for the
 GraphST RNA workflow. Inputs need the spatial coordinates and annotation fields
 accessed in that script. GraphST/PyTorch needs a separate upstream environment. Its accelerator use differs from the
-CPU-only Hisemble core benchmark. Exact versions for the original upstream runs are not specified in this archive.
+CPU-only Hisemble core benchmark. Exact versions for the original upstream runs are not specified in this repository.
 
 ## Downstream analyses
 
@@ -60,8 +60,7 @@ The required GTF assembly and BED coordinates must agree.
 
 ## Presentation files
 
-Pure plotting, panel-layout, typography, and figure-export code is not part of the
-Supplemental Code archive. Numerical result tables produced by the analyses are
+Pure plotting, panel-layout, typography, and figure-export code is not included in this repository. Numerical result tables produced by the analyses are
 reported in the manuscript and Supplemental Tables; full-precision reference CSVs are in `results/`.
 
 ## Numerical lineage analysis
@@ -71,7 +70,3 @@ Supply `mca_BoneMarrow_62216_Hisemble_result.h5ad` containing the saved Hisemble
 consensus graph in `.obsp['connectivities']` and annotations in `.obs['cell_type']`.
 The script reproduces the B-cell lineage DPT and ten-root sensitivity analysis
 reported in Supplemental Fig. S10 and Supplemental Table S8.
-
-## Current convergence scripts (2026-10-11)
-
-The convergence workflow now uses fixed initial W, exactly as the primary analysis. Its original `Relative Change` and pre-update `Delta_Q` columns are retained. The audited full-dataset runner, 24-dataset launcher and original-metric exporter are in [analyses/convergence/](analyses/convergence/README.md). Use `--iterations 50` for the figure range.

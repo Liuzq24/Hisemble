@@ -35,4 +35,4 @@ with tempfile.TemporaryDirectory() as tmp:
  a.obsp['connectivities']=g;a.uns['neighbors']={'connectivities_key':'connectivities','distances_key':'distances','params':{'method':'Hisemble consensus graph','n_neighbors':15}};a.uns['iroot']=0
  sc.tl.diffmap(a,n_comps=15);sc.tl.dpt(a,n_dcs=10,n_branchings=0);assert np.isfinite(a.obs['dpt_pseudotime']).all()
  for name in ['component_ablation.py','seed_stability.py','seed_stability_parallel.py','degraded_view_analysis.py','lsi_neighbor_analysis.py','lineage_trajectory_analysis.py']:run(analyses/name,'--help')
-print('PASS: all packaged tests (9 core/API + 4 convergence), synthetic and AnnData examples, serial/parallel equality, finite graph-based DPT, six CLI entry points')
+print('PASS: all tests (core/API and convergence), synthetic and AnnData examples, serial/parallel equality, finite graph-based DPT, six CLI entry points')
