@@ -1,21 +1,19 @@
-> GitHub checkout: run these commands from the repository root instead of an extracted `Supplemental_Code` folder. The original notebooks and demonstration data are documented in README.md. The journal ZIP contains nine tests; this repository adds two production-core regression tests.
-
 # Hisemble reproduction tutorial
 
 This tutorial runs on a MacBook through Docker Desktop, OrbStack, or another Docker-compatible runtime. It also works on Linux; Windows users may use WSL2. The validated MacBook environment uses Linux/arm64 containers. No GPU is needed for the Hisemble core.
 
-The journal archive is named **Supplemental_Code.zip**. The commands below use its packaged source and dependencies.
+The commands below run from the root of this GitHub checkout.
 
 ## 1. Obtain the code
 
-Download the journal's `Supplemental_Code.zip` and unpack it in a new directory:
+Clone the repository and enter its root directory:
 
 ```bash
-unzip Supplemental_Code.zip
-cd Supplemental_Code
+git clone https://github.com/Liuzq24/Hisemble.git
+cd Hisemble
 ```
 
-Use the files in this archive for the commands below. The project repository is https://github.com/Liuzq24/Hisemble.
+Use this checkout for the commands below. The corresponding journal archive is supplied as Supplemental Code.
 
 ## 2. Start Docker and build
 
@@ -35,7 +33,7 @@ docker run --rm hisemble:reproduce \
   python -m unittest discover -s /opt/hisemble/tests -p 'test_*.py'
 ```
 
-Expected outcome: `OK` (nine tests). These cover aligned input validation, NaN/Inf rejection, mismatched cells, degenerate embeddings, view-order invariance, and the AnnData interface.
+Expected outcome: `OK` (11 tests). These cover aligned input validation, NaN/Inf rejection, mismatched cells, degenerate embeddings, view-order invariance, the AnnData interface, and input-view order invariance in the production core.
 
 A broader executable check additionally runs the four convergence-equivalence checks and both examples, compares serial and parallel seed results, verifies finite graph-based DPT, and checks numerical CLI entry points:
 
@@ -189,7 +187,7 @@ the Pancreas comparison keeps its own helper alongside its two scripts.
 - Missing embedding key: inspect your `.obsm` keys and supply the exact names.
 - NaN/Inf or incompatible cells: correct or explicitly align the upstream inputs before fusion.
 - Memory pressure: begin with the synthetic example and one small biological dataset; reduce parallel workers. Large atlas and dense-ablation runs may exceed a MacBook's RAM.
-- Do not mix old extracted folders with the current `Supplemental_Code.zip`.
+- Run all commands from one checkout; do not mix files from different versions.
 
 ## Current convergence scripts (2026-10-11)
 

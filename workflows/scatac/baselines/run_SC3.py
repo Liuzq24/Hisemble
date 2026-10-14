@@ -128,7 +128,7 @@ def run_sc3_workflow(embeddings, n_clusters, n_runs=20, k_neighbors_for_graph=15
     # Convert the square distance matrix to the condensed vector required by linkage.
     dist_vec = squareform(dist_mat, checks=False)
     
-    Z = linkage(dist_vec, method='average')
+    Z = linkage(dist_vec, method='complete')
     labels = fcluster(Z, t=n_clusters, criterion='maxclust')
     
     print(f"  [Debug] Number of unique cluster labels: {len(np.unique(labels))}")

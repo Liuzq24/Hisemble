@@ -1,61 +1,45 @@
 # Hisemble
 
-A representation-fusion framework for ensemble clustering of single-cell data. Hisemble combines aligned, precomputed embeddings and returns a weighted cell–cell consensus graph with Leiden labels directly in AnnData.
+Training-free fusion of precomputed cell embeddings for scalable ensemble clustering of single-cell chromatin accessibility data.
 
-## Getting started with the original tutorials
+Start with [Reproduction_Tutorial.md](Reproduction_Tutorial.md) to build the pinned environment, run the tests and synthetic example, and reproduce the analyses from external inputs.
 
-Hisemble operates on precomputed embeddings stored in an AnnData object's `.obsm`. Obtain these representations with upstream tools such as scBasset, SnapATAC2, LSI or scVI before applying Hisemble to your own data. Input views must contain the same cells in the same row order; their feature dimensions may differ.
+| Location | Contents |
+|---|---|
+| `hisemble/` | Fusion and AnnData API |
+| `tests/` and `examples/` | Tests and runnable examples |
+| `reproducibility/` | Docker, pip and Conda specifications; executable verification |
+| `analyses/` | Supplementary analysis scripts |
+| `results/` | Supplemental Tables S1--S10 and Fig. S10 cell-level pseudotime |
+| `workflows/` | Preprocessing, encoder, benchmark and downstream workflows grouped by data modality |
+| `ANALYSIS_MAP.md` | Analysis-to-script mapping |
+| `INPUTS_AND_ENVIRONMENTS.md` | Required data and environment boundaries |
+| `WORKFLOW_MANIFEST.csv` and `SHA256SUMS` | Script inventory and file checksums |
 
-The original notebooks and demonstration data remain available:
+The core accepts precomputed embeddings. Raw data and large embeddings are external inputs; upstream encoders require separate environments. Figures are supplied with the manuscript.
 
-| Tutorial | Demonstration input | What it shows |
-| --- | --- | --- |
-| [Single-cell quick start](tutorials/single_cell_quick_start.ipynb) | [mouse_brain.h5ad](demo_data/mouse_brain.h5ad) | Fuse `X_lsi`, `X_snap` and `X_scBasset`, save labels as `Hisemble_clusters`, and visualize the consensus graph with Scanpy UMAP. |
-| [Spatial quick start](tutorials/spatial_quick_start.ipynb) | [E11_0.h5ad](demo_data/E11_0.h5ad) | Fuse `spatial` coordinates and `X_lsi`, save labels as `Hisemble_domains`, and display the spatial domains. |
-
-To run the notebooks locally, clone the repository and install the package and notebook dependencies:
+To prepare workflows with your input paths, replace the paths in `config.example.json`, then run:
 
 ```bash
-git clone https://github.com/Liuzq24/Hisemble.git
-cd Hisemble
-conda env create -f reproducibility/environment-core.yml
-conda activate hisemble-core
-python -m pip install -r reproducibility/requirements-trajectory.txt
-python -m pip install -e .
-python -m pip install notebook ipykernel
-cd tutorials
-python -m notebook
+python prepare_workflows.py --config /absolute/path/config.json --output /absolute/path/new-workdir
 ```
 
-Open either notebook and run its cells in order. Run from the `tutorials/` directory so that the existing `../demo_data/` paths resolve correctly. For your own AnnData input, replace the data path and `input_keys` with the keys in your `.obsm`, and choose the corresponding metrics. The examples below describe the same public API.
+Project repository: https://github.com/Liuzq24/Hisemble
 
-## Repository guide
+## Run a first example
 
-- [tutorials/](tutorials/): the original single-cell and spatial notebooks.
-- [demo_data/](demo_data/): the AnnData inputs used by those notebooks.
-- [hisemble/](hisemble/): the installable package, including graph construction, fusion, clustering and input validation.
-- [requirements.txt](requirements.txt) and [setup.py](setup.py): the original dependency list and package installation configuration. Use the pinned environment above for reproducible dependency versions.
-- [Reproduction_Tutorial.md](Reproduction_Tutorial.md): the additional Docker and numerical reproduction walkthrough.
-- [examples/](examples/), [reproducibility/](reproducibility/) and [tests/](tests/): executable examples, environment specifications and verification checks.
-
-## Reproduce on macOS or Linux
-
-Start with [Reproduction_Tutorial.md](Reproduction_Tutorial.md). The tutorial covers Docker setup, input checks, a complete synthetic example, saved AnnData inputs, and the reviewer analyses.
+From this `Supplemental_Code` directory:
 
 ```bash
-git clone https://github.com/Liuzq24/Hisemble.git
-cd Hisemble
 docker build -f reproducibility/Dockerfile -t hisemble:reproduce .
-mkdir -p reviewer_output
-docker run --rm -v "$PWD/reviewer_output:/output" hisemble:reproduce \
+mkdir -p example_output
+docker run --rm -v "$PWD/example_output:/output" hisemble:reproduce \
   python /opt/hisemble/examples/quickstart_synthetic.py --output-dir /output
 ```
 
-The example needs no biological download or GPU. It writes a 180-cell AnnData result with four clusters. Docker Desktop or OrbStack must be running on a MacBook.
+The synthetic example uses 180 cells and needs no biological download or GPU.
 
-## Direct AnnData use
-
-Store aligned cell embeddings under user-chosen `.obsm` keys, then run:
+## Use the AnnData interface
 
 ```python
 from hisemble import run_hisemble
@@ -71,30 +55,15 @@ run_hisemble(
 )
 ```
 
-The consensus graph is stored in `.obsp['connectivities']`, distances in `.obsp['distances']`, labels in `.obs['hisemble_clusters']`, and graph metadata in `.uns['neighbors']`. These can be used by Scanpy graph-based workflows. Hisemble produces a consensus graph; upstream embeddings remain in `.obsm`.
+The consensus graph is stored in `.obsp['connectivities']`, distances in
+`.obsp['distances']`, labels in `.obs['hisemble_clusters']`, and graph metadata in
+`.uns['neighbors']`. Input views must describe the same cells in the same row
+order, contain finite values and exhibit non-degenerate variation.
 
-## Input validation
-
-All views must contain the same cells in the same row order, finite numeric values and non-degenerate cell-to-cell variation. Views may have different feature dimensions. `run_hisemble` invokes `validate_embeddings` before affinity construction. NaN/Inf triggers an informative error. Finite extreme row norms produce a diagnostic warning by default; explicit per-view identifiers and stricter outlier handling are available through `validate_embeddings`. Cells are not automatically imputed or deleted.
-
-## Numerical revision analyses
-
-[analyses/](analyses/) contains component ablation/scaling, LSI neighborhood complementarity, eight-dataset ten-seed stability, three-dataset degraded-view robustness and numerical DPT lineage analysis. [results/](results/) contains the current Supplemental Tables S1–S10 and cell-level pseudotime. [workflows/](workflows/), [ANALYSIS_MAP.md](ANALYSIS_MAP.md) and [INPUTS_AND_ENVIRONMENTS.md](INPUTS_AND_ENVIRONMENTS.md) document preprocessing, representations, benchmarks and their separate input/environment requirements. Configure external paths with `prepare_workflows.py` and `config.example.json`.
-
-The journal archive is [supplemental_code/Supplemental_Code.zip](supplemental_code/Supplemental_Code.zip). Use root-level analyses and results for the current revision.
-
-## Installation without Docker
-
-A pinned Conda specification is provided in [reproducibility/environment-core.yml](reproducibility/environment-core.yml). Then install this package with `pip install -e .`. Numerical lineage analysis additionally needs [requirements-trajectory.txt](reproducibility/requirements-trajectory.txt). Upstream encoders have separate dependencies; they are not all trained by the core environment.
-
-## Verification
-
-```bash
-docker run --rm hisemble:reproduce \
-  python /opt/hisemble/reproducibility/verify_installation.py
-```
-
-This runs the packaged tests, both examples, serial/parallel seed comparison, a graph-based DPT check and CLI checks. Details are recorded in [VALIDATION.md](reproducibility/VALIDATION.md).
+For installation without Docker, use `reproducibility/environment-core.yml` and
+then `pip install -e .`. DPT analysis also uses
+`reproducibility/requirements-trajectory.txt`. See `INPUTS_AND_ENVIRONMENTS.md`
+for upstream encoder and data requirements.
 
 ## Current convergence scripts (2026-10-11)
 

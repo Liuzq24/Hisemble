@@ -114,7 +114,7 @@ A single embedding gives a single-view baseline; multiple embeddings give a mult
     dist_mat = np.clip(dist_mat, 0, 1) 
     dist_vec = squareform(dist_mat, checks=False)
     
-    Z = linkage(dist_vec, method='average')
+    Z = linkage(dist_vec, method='complete')
     labels = fcluster(Z, t=n_clusters, criterion='maxclust')
     
     # 4. Extract a sparse graph for UMAP visualization.

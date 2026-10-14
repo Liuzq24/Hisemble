@@ -1,8 +1,0 @@
-scanpy==1.9.8
-numpy
-scipy
-scikit-learn
-igraph
-leidenalg
-pandas
-ipykernel
